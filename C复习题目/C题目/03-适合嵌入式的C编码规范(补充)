@@ -1,0 +1,31 @@
+可依据具体情况调整的编码风格：
+
+1、缩进不允许使用TAB，始终使用4个空格。（这样你的代码不管在Linux系统、Git/SVN、Windows中，或者在任何编辑器中看起来缩进都是一样的，如果有人使用了Tab而有人使用了4个空格，那么你用Git提交代码时和查看修改时，Tab会显示为8个空格）。
+备注：在某些脚本编写(如Makefile)中Tab有特殊的含义，使用空格会报错，这时请按规定使用Tab。
+
+2、{}大括号匹配前面的括号不用放在前面一行的末尾，另起一行单独放，如：
+Linux kernel：
+	while (1) {
+		/** Your codes. */
+	}
+修改为：
+    while (1)
+    {
+        /** Your codes. */
+    }
+
+3、if else while for等关键字和后面的括号间应该有一个空格，操作符号>、<、==、&&、||等双元操作符左右都应该留一个空格
+    if (flag > 0)
+    {
+        for (i = 0; i < max; i++);
+    }
+
+4、不使用小写字母和下划线组合的命名法，使用匈牙利命名法或者说驼峰命名法。
+int g_globalFlag;
+char *p_pointerFunc;
+typedef __myStruct {
+    /**  */
+} MY_STRUCT;
+MY_STRUCT m_myStruct;
+
+

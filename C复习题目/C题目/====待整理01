@@ -1,0 +1,5110 @@
+第二阶段
+1、请定义一个宏，比较两个数a、b的大小，不能使用大于、小于、if语句
+#define MAX(A,B) (((A)-(B))>>31 ? (B) : (A))  
+
+2、如何输出源文件的标题和目前执行行的行数
+
+int line = __LINE__;
+
+char *file = __FILE__;
+
+cout<<"file name is "<<(file)<<",line is "<
+
+4、写一个病毒
+void main（）
+{
+while (1)
+{    
+int *p = new int[10000000];
+}
+}
+
+
+27、请说出const与#define 相比，有何优点？
+答：Const作用：定义常量、修饰函数参数、修饰函数返回值三个作用。被Const修饰的东西都受到强制保护，可以预防意外的变动，能提高程序的健壮性。
+1） const 常量有数据类型，而宏常量没有数据类型。编译器可以对前者进行类型安全检查。而对后者只进行字符替换，没有类型安全检查，并且在字符替换可能会产生意料不到的错误。
+      2） 有些集成化的调试工具可以对const 常量进行调试，但是不能对宏常量进行调试。
+
+28、简述数组与指针的区别？
+答：数组要么在静态存储区被创建（如全局数组），要么在栈上被创建。指针可以随时指向任意类型的内存块。
+    (1)修改内容上的差别
+      char a[] = “hello”;
+      a[0] = ‘X’;
+      char *p = “world”; // 注意p 指向常量字符串
+      p[0] = ‘X’; // 编译器不能发现该错误，运行时错误
+   (2) 用运算符sizeof 可以计算出数组的容量（字节数）。sizeof(p),p 为指针得到的是一个 指针变量的字节数，而不是p 所指的内存容量。C++/C 语言没有办法知道指针所指的内存容量，除非在申请内存时记住它。注意当数组作为函数的参数进行传递时，该数组自动退化为同类型的指针。
+     char a[] = "hello world";
+     char *p = a;
+     cout<< sizeof(a) << endl; // 12 字节
+     cout<< sizeof(p) << endl; // 4 字节
+     计算数组和指针的内存容量
+     void Func(char a[100])
+     {
+      cout<< sizeof(a) << endl; // 4 字节而不是100 字节
+     }
+
+
+/////////
+//未扪及
+/////////
+
+25:用两个栈实现一个队列的功能？
+参考答案：
+设2个栈为A,B, 一开始均为空.入队:
+将新元素push入栈A;出队:
+(1)判断栈B是否为空；
+(2)如果不为空，则将栈A中所有元素依次pop出并push到栈B；
+(3)将栈B的栈顶元素pop出；这样实现的队列入队和出队的平摊复杂度都还是O(1),
+
+23:多态类中的虚函数表是Compile-Time，还是Run-Time时建立的?
+参考答案：
+虚拟函数表是在编译期就建立了,各个虚拟函数这时被组织成了一个虚拟函数的入口地址的数组.
+而对象的隐藏成员--虚拟函数表指针是在运行期--也就是构造函数被调用时进行初始化的,这是实现多态的关键.
+
+22:谈谈COM的线程模型。然后讨论进程内/外组件的差别。
+
+2:为了向二进制文件尾部增加数据，打开文件的方式应采用
+A.″ab″
+B.″rb+″
+C.″wb″
+D.″wb+″
+参考答案：D
+
+2.static 数据成员必须在类定义的外部定义。不象普通数据成员，static成员不是通过类构造函数进行初始化，而是应该在定义时进行初始化。
+静态数据成员的用途之一是统计有多少个对象实际存在。
+静态数据成员不能在类中初始化，实际上类定义只是在描述对象的蓝图，在其中指定初值是不允许的。也
+不能在构造函数中初始化该成员，因为静态数据成员为类的各个对象共享，那么每次创建一个类的对象则
+静态数据成员都要被重新初始化
+#include <stdio.h>
+class A
+{
+public:
+//    A() {i=3;} // 不注释掉会出现链接错误
+
+void foo() 
+{ printf("%d\n",i);
+}
+private:
+static int i; //如果换成static int i=10;出错
+
+};
+int A::i=10; //static变量在类外定义
+
+void main()
+{
+A a;
+a.foo();
+}
+
+13.7.C++中为什么用模板类。
+答：(1)可用来创建动态增长和减小的数据结构
+（2）它是类型无关的，因此具有很高的可复用性。
+（3）它在编译时而不是运行时检查数据类型，保证了类型安全
+（4）它是平台无关的，可移植性
+（5）可用于基本数据类型
+
+4.求大数的阶乘例如100！，使用通常的做法会溢出，这里要使用数组的方法。例如：123*20 相当于 100*20 + 20*20+3*20
+#include <stdio.h> 
+int main() 
+{ 
+int n = 1; 
+scanf("%d",&n); 
+int a[20000]; 
+int carry; 
+int i; 
+int digit = 1; 
+a[0] = 1; 
+int temp; 
+for(i = 2; i <= n; ++i) 
+{ 
+carry = 0; 
+for(int j = 1; j <= digit; ++j) //digit 大数的位数
+
+{ 
+temp = a[j-1] * i + carry; 
+a[j-1] = temp % 10; 
+carry = temp / 10; //进位 
+
+} 
+while(carry) 
+{ 
+a[++digit-1] = carry % 10; 
+carry /= 10; 
+} 
+} 
+for(i = digit; i >=1; --i) 
+{ 
+printf("%d",a[i-1]); 
+} 
+printf("\n"); 
+n++; 
+return 0; 
+} 
+
+1. 引用与指针有什么区别？
+    1) 引用必须被初始化，指针不必。
+    2) 引用初始化以后不能被改变，指针可以改变所指的对象。
+    3) 不存在指向空值的引用，但是存在指向空值的指针。
+2. 堆栈溢出一般是由什么原因导致的？
+      没有回收垃圾资源。
+3. 什么函数不能声明为虚函数？
+      constructor函数不能声明为虚函数。
+5. 不能做switch()的参数类型是：
+     switch的参数不能为实型
+
+8. 在C++ 程序中调用被 C 编译器编译后的函数，为什么要加 extern “C”声明?
+答：函数和变量被C++编译后在符号库中的名字与C语言的不同，被extern "C"修饰的变量和函数是按照C语言方式编译和连接的。由于编译后的名字不同，C++程序不能直接调用C 函数。C++提供了一个C 连接交换指定符号extern“C”来解决这个问题。
+12. 列举几种进程的同步机制，并比较其优缺点。
+答：原子操作、信号量机制、自旋锁、管程、会合、分布式系统
+13. 进程死锁的原因和4个必要条件
+答：资源竞争及进程推进顺序非法；互斥、请求保持、不可剥夺、环路
+4、组合问题（从M个不同字符中任取N个字符的所有组合）
+void find(char *source, char *result, int n) {
+     if(n==1) {
+         while(*source)
+            printf("%s%c\n", result, *source++);
+     } else {
+         int i, j;
+         for(i=0; source[i] != 0; i++);
+         for(j=0; result[j] != 0; j++);
+         for(; i>=n; i--) {
+              result[j] = *source++;
+              result[j+1] = '\0';
+              find(source, result, n-1);
+         }
+     }
+}
+ 
+int main(int argc, char* argv[]) {
+     int const n = 3;
+     char *source = "ABCDE", result[n+1] = {0};
+     if(n>0 && strlen(source)>0 && n<=strlen(source))
+         find(source, result, 3);
+}
+
+5、分解成质因数(如435234=251*17*17*3*2，据说是华为笔试题)
+void prim(int m, int n) {
+     if(m>n) {
+         while(m%n != 0) n++;
+         m /= n;
+         prim(m, n);
+         printf("%d*", n);
+     }
+}
+int main(int argc, char* argv[]) {
+     int n = 435234;
+     printf("%d=", n);
+     prim(n, 2);
+}
+6、寻找迷宫的一条出路，o：通路； X：障碍。（大家经常谈到的一个小算法题）
+#define MAX_SIZE  8
+int H[4] = {0, 1, 0, -1}; 
+int V[4] = {-1, 0, 1, 0};           
+char Maze[MAX_SIZE][MAX_SIZE] = {{'X','X','X','X','X','X','X','X'},
+                                 {'o','o','o','o','o','X','X','X'},
+                                 {'X','o','X','X','o','o','o','X'},
+                                 {'X','o','X','X','o','X','X','o'},
+                                 {'X','o','X','X','X','X','X','X'},
+{'X','o','X','X','o','o','o','X'},
+                                 {'X','o','o','o','o','X','o','o'},
+                                 {'X','X','X','X','X','X','X','X'}};
+void FindPath(int X, int Y) {
+    if(X == MAX_SIZE || Y == MAX_SIZE) {
+         for(int i = 0; i < MAX_SIZE; i++)
+for(int j = 0; j < MAX_SIZE; j++)
+                  printf("%c%c", Maze[i][j], j < MAX_SIZE-1 ? ' ' : '\n');
+}else for(int k = 0; k < 4; k++) 
+if(X >= 0 && Y >= 0 && Y < MAX_SIZE && X < MAX_SIZE && 'o' == Maze[X][Y]) {
+                  Maze[X][Y] = ' ';
+                  FindPath(X+V[k], Y+H[k]);
+                  Maze[X][Y] ='o'; 
+}
+}
+int main(int argc, char* argv[]) {
+    FindPath(1,0);
+}
+  
+7、随机分配座位，共50个学生，使学号相邻的同学座位不能相邻(早些时候用C#写的，没有用C改写）。
+static void Main(string[] args)
+{
+     int Tmp = 0, Count = 50;                 
+     int[] Seats = new int[Count];             
+     bool[] Students = new bool[Count];
+     System.Random RandStudent=new System.Random();
+     Students[Seats[0]=RandStudent.Next(0,Count)]=true;
+     for(int i = 1; i < Count; ) {
+         Tmp=(int)RandStudent.Next(0,Count);
+         if((!Students[Tmp])&&(Seats[i-1]-Tmp!=1) && (Seats[i-1] - Tmp) != -1) {
+              Seats[i++] = Tmp;
+Students[Tmp] = true;
+         }
+     }
+     foreach(int Student in Seats)
+         System.Console.Write(Student + " ");
+     System.Console.Read();
+}
+ 
+8、求网格中的黑点分布。现有6*7的网格，在某些格子中有黑点，已知各行与各列中有黑点的点数之和，请在这张网格中画出黑点的位置。（这是一网友提出的题目，说是他笔试时遇到算法题）
+#define ROWS 6
+#define COLS 7
+int iPointsR[ROWS] = {2, 0, 4, 3, 4, 0};           // 各行黑点数和的情况
+int iPointsC[COLS] = {4, 1, 2, 2, 1, 2, 1};        // 各列黑点数和的情况
+int iCount, iFound;
+int iSumR[ROWS], iSumC[COLS], Grid[ROWS][COLS];
+ 
+int Set(int iRowNo) {
+if(iRowNo == ROWS) { 
+        for(int iColNo=0; iColNo < COLS && iSumC[iColNo]==iPointsC[iColNo]; iColNo++) 
+           if(iColNo == COLS-1) {
+               printf("\nNo.%d:\n", ++iCount); 
+               for(int i=0; i < ROWS; i++)
+                  for(int j=0; j < COLS; j++)
+                      printf("%d%c", Grid[i][j], (j+1) % COLS ? ' ' : '\n');
+               iFound = 1;  // iFound = 1，有解
+           }
+    } else {
+        for(int iColNo=0; iColNo < COLS; iColNo++) {
+            if(iPointsR[iRowNo] == 0) { 
+                Set(iRowNo + 1);
+   } else if(Grid[iRowNo][iColNo]==0) { 
+Grid[iRowNo][iColNo] = 1; 
+iSumR[iRowNo]++; iSumC[iColNo]++;                                  if(iSumR[iRowNo]<iPointsR[iRowNo] && iSumC[iColNo]<=iPointsC[iColNo])
+                     Set(iRowNo);
+else if(iSumR[iRowNo]==iPointsR[iRowNo] && iRowNo < ROWS)
+                     Set(iRowNo + 1);
+                Grid[iRowNo][iColNo] = 0;
+                iSumR[iRowNo]--; 
+iSumC[iColNo]--;
+            }
+        }
+    }
+return iFound;          // 用于判断是否有解
+}
+int main(int argc, char* argv[]) {
+    if(!Set(0))
+        printf("Failure!"); 
+}
+
+9、有4种面值的邮票很多枚，这4种邮票面值分别1, 4, 12, 21，现从多张中最多任取5张进行组合，求取出这些邮票的最大连续组合值。（据说是华为2003年校园招聘笔试题）
+#define N 5
+#define M 5
+int k, Found, Flag[N];
+int Stamp[M] = {0, 1, 4, 12, 21};
+ 
+// 在剩余张数n中组合出面值和Value
+int Combine(int n, int Value) {
+     if(n >= 0 && Value == 0) {
+         Found = 1;
+         int Sum = 0;
+         for(int i=0; i<N && Flag[i] != 0; i++) {
+              Sum += Stamp[Flag[i]];
+              printf("%d ", Stamp[Flag[i]]);
+         }
+         printf("\tSum=%d\n\n", Sum);
+     }else for(int i=1; i<M && !Found && n>0; i++)
+         if(Value-Stamp[i] >= 0) {
+              Flag[k++] = i;
+              Combine(n-1, Value-Stamp[i]);
+              Flag[--k] = 0;
+         }
+     return Found;
+}
+ 
+int main(int argc, char* argv[]) {
+     for(int i=1; Combine(N, i); i++, Found=0);
+}
+ 
+10、大整数数相乘的问题。（这是2002年在一考研班上遇到的算法题）
+void Multiple(char A[], char B[], char C[]) {
+    int TMP, In=0, LenA=-1, LenB=-1;
+    while(A[++LenA] != '\0');
+    while(B[++LenB] != '\0');
+    int Index, Start = LenA + LenB - 1;
+    for(int i=LenB-1; i>=0; i--) {
+        Index = Start--;
+        if(B[i] != '0') {
+            for(int In=0, j=LenA-1; j>=0; j--) {
+                TMP = (C[Index]-'0') + (A[j]-'0') * (B[i] - '0') + In;
+                C[Index--] = TMP % 10 + '0';
+                In = TMP / 10;
+            }
+            C[Index] = In + '0';
+        }
+    }
+}
+ 
+int main(int argc, char* argv[]) {
+    char A[] = "21839244444444448880088888889";
+    char B[] = "38888888888899999999999999988";
+char C[sizeof(A) + sizeof(B) - 1];
+ 
+    for(int k=0; k<sizeof(C); k++)
+        C[k] = '0';
+    C[sizeof(C)-1] = '\0';
+ 
+    Multiple(A, B, C);
+    for(int i=0; C[i] != '\0'; i++)
+        printf("%c", C[i]);
+}
+ 
+11、求最大连续递增数字串（如“ads3sl456789DF3456ld345AA”中的“456789”）
+int GetSubString(char *strSource, char *strResult) {
+    int iTmp=0, iHead=0, iMax=0;
+    for(int Index=0, iLen=0; strSource[Index]; Index++) {
+        if(strSource[Index] >= '0' && strSource[Index] <= '9' && 
+strSource[Index-1] > '0' && strSource[Index] == strSource[Index-1]+1) {
+            iLen++;                       // 连续数字的长度增1 
+        } else {                          // 出现字符或不连续数字
+            if(iLen > iMax) {
+            iMax = iLen;    iHead = iTmp; 
+            }        
+            // 该字符是数字，但数字不连续
+            if(strSource[Index] >= '0' && strSource[Index] <= '9') { 
+                iTmp = Index; 
+iLen = 1; 
+            }
+        }    
+    }
+    for(iTmp=0 ; iTmp < iMax; iTmp++) // 将原字符串中最长的连续数字串赋值给结果串
+        strResult[iTmp] = strSource[iHead++];
+    strResult[iTmp]='\0';
+    return iMax;                     // 返回连续数字的最大长度
+}
+int main(int argc, char* argv[]) {
+    char strSource[]="ads3sl456789DF3456ld345AA", char strResult[sizeof(strSource)];
+printf("Len=%d, strResult=%s \nstrSource=%s\n", 
+GetSubString(strSource, strResult), strResult, strSource);
+}
+ 
+12、四个工人，四个任务，每个人做不同的任务需要的时间不同，求任务分配的最优方案。（2005年5月29日全国计算机软件资格水平考试——软件设计师的算法题）。
+#include "stdafx.h"
+#define N 4
+int  Cost[N][N] = { {2, 12, 5, 32},       // 行号：任务序号，列号：工人序号
+                    {8, 15, 7, 11},       // 每行元素值表示这个任务由不同工人完成所需要的时间
+                    {24, 18, 9, 6},
+                    {21, 1, 8, 28}};
+int MinCost=1000;
+int Task[N], TempTask[N], Worker[N];
+void Assign(int k, int cost) {
+     if(k == N) {
+         MinCost = cost;    
+         for(int i=0; i<N; i++)
+              TempTask[i] = Task[i];
+     } else {
+         for(int i=0; i<N; i++) {    
+              if(Worker[i]==0 && cost+Cost[k][i] < MinCost) {    // 为提高效率而进行剪枝
+                   Worker[i] = 1;     Task[k] = i; 
+                   Assign(k+1, cost+Cost[k][i]); 
+                   Worker[i] = 0; Task[k] = 0;
+              }
+         }
+     }
+}
+int main(int argc, char* argv[]) {
+     Assign(0, 0);
+     printf("最佳方案总费用=%d\n", MinCost);
+     for(int i=0; i<N; i++)      /* 输出最佳方案 */
+         printf("\t任务%d由工人%d来做：%d\n", i, TempTask[i], Cost[i][TempTask[i]]);
+}
+13、八皇后问题，输出了所有情况，不过有些结果只是旋转了90度而已。（回溯算法的典型例题，是数据结构书上算法的具体实现，大家都亲自动手写过这个程序吗？）
+#define N 8
+int Board[N][N];
+int Valid(int i, int j) {        // 判断下棋位置是否有效
+     int k = 1;
+     for(k=1; i>=k && j>=k;k++)
+         if(Board[i-k][j-k])    return 0;
+     for(k=1; i>=k;k++)
+         if(Board[i-k][j])      return 0;
+     for(k=1; i>=k && j+k<N;k++)
+         if(Board[i-k][j+k])    return 0;
+     return 1;
+}
+ 
+void Trial(int i, int n) {       // 寻找合适下棋位置
+     if(i == n) {
+         for(int k=0; k<n; k++) {
+              for(int m=0; m<n; m++)
+                   printf("%d ", Board[k][m]);
+              printf("\n");
+         }
+         printf("\n");
+     } else {
+         for(int j=0; j<n; j++) {
+              Board[i][j] = 1;
+              if(Valid(i,j))
+                   Trial(i+1, n);
+              Board[i][j] = 0;
+         }
+     }
+}
+ 
+int main(int argc, char* argv[]) {
+     Trial(0, N);
+}
+ 
+14、实现strstr功能，即在父串中寻找子串首次出现的位置。（笔试中常让面试者实现标准库中的一些函数）
+char * strstring(char *ParentString, char *SubString) {
+     char *pSubString, *pPareString;
+     for(char *pTmp=ParentString; *pTmp; pTmp++) {
+         pSubString = SubString;
+         pPareString = pTmp;    
+         while(*pSubString == *pPareString && *pSubString != '\0') {
+              pSubString++;
+              pPareString++;
+         }
+         if(*pSubString == '\0')     return pTmp;
+     }
+     return NULL;
+}
+ 
+int main(int argc, char* argv[]) {
+     char *ParentString = "happy birthday to you!";
+     char *SubString = "birthday";
+     printf("%s",strstring(ParentString, SubString));
+}
+ 
+15、现在小明一家过一座桥，过桥的时候是黑夜，所以必须有灯。现在小明过桥要1分，小明的弟弟要3分，小明的爸爸要6分，小明的妈妈要8分，小明的爷爷要12分。每次此桥最多可过两人，而过桥的速度依过桥最慢者而定，而且灯在点燃后30分就会熄灭。问小明一家如何过桥时间最短？（原本是个小小智力题，据说是外企的面试题，在这里用程序来求解）
+#include "stdafx.h"
+#define N    5
+#define SIZE 64
+ 
+// 将人员编号：小明-0，弟弟-1，爸爸-2，妈妈-3，爷爷-4
+// 每个人的当前位置：0--在桥左边， 1--在桥右边
+int Position[N];    
+// 过桥临时方案的数组下标； 临时方案； 最小时间方案； 
+int Index, TmpScheme[SIZE], Scheme[SIZE];   
+// 最小过桥时间总和，初始值100；每个人过桥所需要的时间
+int MinTime=100, Time[N]={1, 3, 6, 8, 12};  
+// 寻找最佳过桥方案。Remnant:未过桥人数; CurTime:当前已用时间; 
+// Direction:过桥方向,1--向右,0--向左
+void Find(int Remnant, int CurTime, int Direction) {
+    if(Remnant == 0) {                               // 所有人已经过桥，更新最少时间及方案
+        MinTime=CurTime;
+        for(int i=0; i<SIZE && TmpScheme[i]>=0; i++)
+            Scheme[i] = TmpScheme[i];
+    } else if(Direction == 1) {                        // 过桥方向向右，从桥左侧选出两人过桥
+        for(int i=0; i<N; i++)                    
+            if(Position[i] == 0 && CurTime + Time[i] < MinTime) { 
+                TmpScheme[Index++] = i;
+                Position[i] = 1;
+                for(int j=0; j<N; j++) {
+                    int TmpMax = (Time[i] > Time[j] ? Time[i] : Time[j]);
+                    if(Position[j] == 0 && CurTime + TmpMax < MinTime) {
+                        TmpScheme[Index++] = j;    
+                        Position[j] = 1;        
+                        Find(Remnant - 2, CurTime + TmpMax, !Direction); 
+                        Position[j] = 0;        
+                        TmpScheme[--Index] = -1;
+                    }
+                }
+                Position[i] = 0;
+                TmpScheme[--Index] = -1;
+            }
+    } else {        // 过桥方向向左，从桥右侧选出一个人回来送灯
+        for(int j=0; j<N; j++) {
+            if(Position[j] == 1 && CurTime+Time[j] < MinTime) {
+                TmpScheme[Index++] = j;
+                Position[j] = 0;
+                Find(Remnant+1, CurTime+Time[j], !Direction);
+                Position[j] = 1;
+                TmpScheme[--Index] = -1;
+            }
+        }
+    }
+}
+int main(int argc, char* argv[]) {
+    for(int i=0; i<SIZE; i++)        // 初始方案内容为负值，避免和人员标号冲突
+        Scheme[i] = TmpScheme[i] = -1;
+ 
+Find(N, 0, 1);                   // 查找最佳方案
+ 
+    printf("MinTime=%d:", MinTime);  // 输出最佳方案
+    for(int i=0; i<SIZE && Scheme[i]>=0; i+=3)
+        printf("  %d-%d  %d", Scheme[i], Scheme[i+1], Scheme[i+2]);
+    printf("\b\b  ");
+}
+ 
+16、2005年11月金山笔试题。编码完成下面的处理函数。函数将字符串中的字符'*'移到串的前部分，前面的非'*'字符后移，但不能改变非'*'字符的先后顺序，函数返回串中字符'*'的数量。如原始串为：ab**cd**e*12，处理后为*****abcde12，函数并返回值为5。（要求使用尽量少的时间和辅助空间）
+int change(char *str) {                   /* 这个算法并不高效，从后向前搜索效率要高些 */
+     int count = 0;                       /* 记录串中字符'*'的个数 */
+     for(int i=0, j=0; str[i]; i++) {     /* 重串首开始遍历 */
+         if(str[i]=='*') {                /* 遇到字符'*' */
+              for(j=i-1; str[j]!='*'&&j>=0; j--) /* 采用类似插入排序的思想，将*前面 */
+                   str[j+1]=str[j];              /* 的非*字符逐个后移，直到遇到*字符 */
+              str[j+1] = '*';
+              count++;
+         }
+     }
+     return count;
+}
+int main(int argc, char* argv[]) {
+     char str[] = "ab**cd**e*12";
+     printf("str1=%s\n", str);
+     printf("str2=%s, count=%d", str, change(str));
+}
+// 终于得到一个比较高效的算法，一个网友提供，估计应该和金山面试官的想法一致。算法如下：
+int change(char *str) {
+     int i,j=strlen(str)-1;
+     for(i=j; j>=0; j--) {
+         if(str[i]!='*') {
+              i--;
+         } else if(str[j]!='*') {
+              str[i] = str[j];
+              str[j] = '*';
+              i--;
+         }
+     }
+     return i+1;
+}
+ 
+17、2005年11月15日华为软件研发笔试题。实现一单链表的逆转。
+#include "stdafx.h"
+typedef char eleType;       // 定义链表中的数据类型
+typedef struct listnode {   // 定义单链表结构
+     eleType data;
+     struct listnode *next;
+}node;
+ 
+node *create(int n) {       // 创建单链表，n为节点个数
+     node *p = (node *)malloc(sizeof(node));   
+     node *head = p;    head->data = 'A';
+     for(int i='B'; i<'A'+n; i++) {                 
+         p = (p->next = (node *)malloc(sizeof(node)));
+         p->data = i;
+         p->next = NULL;        
+     }
+     return head;
+}
+ 
+void print(node *head) {    // 按链表顺序输出链表中元素
+     for(; head; head = head->next)
+         printf("%c ", head->data);  
+     printf("\n");
+}
+ 
+node *reverse(node *head, node *pre) {    // 逆转单链表函数。这是笔试时需要写的最主要函数
+     node *p=head->next;
+     head->next = pre;
+     if(p)    return reverse(p, head);
+     else     return head;
+}
+ 
+int main(int argc, char* argv[]) {
+     node *head = create(6);
+     print(head);
+     head = reverse(head, NULL);
+     print(head);
+}
+ 
+18、编码实现字符串转整型的函数（实现函数atoi的功能），据说是神州数码笔试题。如将字符串 ”+123”à123, ”-0123”à-123, “123CS45”à123, “123.45CS”à123, “CS123.45”à0
+#include "stdafx.h"
+int str2int(const char *str) {                // 字符串转整型函数
+     int i=0, sign=1, value = 0;
+     if(str==NULL) return NULL;               // 空串直接返回 NULL
+     if(str[0]=='-' || str[0]=='+') {          // 判断是否存在符号位
+         i = 1;
+         sign = (str[0]=='-' ? -1 : 1);
+     }
+     for(; str[i]>='0' && str[i]<='9'; i++)    // 如果是数字，则继续转换
+         value = value * 10 + (str[i] - '0');
+     return sign * value;
+}
+ 
+int main(int argc, char *argv[]) {
+     char *str = "-123.45CS67"; 
+     int  val  = str2int(str);
+     printf("str=%s\tval=%d\n", str, val);
+}
+ 
+19、歌德巴赫猜想。任何一个偶数都可以分解为两个素数之和。（其实这是个C二级考试的模拟试题）
+#include "stdafx.h"
+#include "math.h"
+int main(int argc, char* argv[]) {
+     int Even=78, Prime1, Prime2, Tmp1, Tmp2;
+     for(Prime1=3; Prime1<=Even/2; Prime1+=2) {
+         for(Tmp1=2,Tmp2=sqrt(float(Prime1)); Tmp1<=Tmp2 && Prime1%Tmp1 != 0; Tmp1++);
+         if(Tmp1<=Tmp2) continue;
+         Prime2 = Even-Prime1;
+         for(Tmp1=2,Tmp2=sqrt(float(Prime2)); Tmp1<=Tmp2 && Prime2%Tmp1 != 0; Tmp1++);
+         if(Tmp1<=Tmp2) continue;
+         printf("%d=%d+%d\n", Even, Prime1, Prime2);
+     }
+}
+ 
+20、快速排序（东软喜欢考类似的算法填空题，又如堆排序的算法等）
+#include "stdafx.h"
+#define N 10
+int part(int list[], int low, int high) {      // 一趟排序，返回分割点位置
+     int tmp = list[low];
+     while(low<high) {
+         while(low<high && list[high]>=tmp) --high;
+         list[low] = list[high];
+         while(low<high && list[low]<=tmp)  ++low;
+         list[high] = list[low];
+     }
+     list[low] = tmp;
+     return low;
+}
+void QSort(int list[], int low, int high) {    // 应用递归进行快速排序
+     if(low<high) {
+         int mid = part(list, low, high);
+         QSort(list, low, mid-1);
+         QSort(list, mid+1, high);
+     }
+}
+void show(int list[], int n) {                 // 输出列表中元素
+     for(int i=0; i<n; i++)
+         printf("%d ", list[i]);
+     printf("\n");
+}
+int main(int argc, char* argv[]) {
+     int list[N] = {23, 65, 26, 1, 6, 89, 3, 12, 33, 8};
+     show(list, N);                            // 输出排序前序列
+     QSort(list, 0, N-1);                      // 快速排序
+     show(list, N);                            // 输出排序后序列
+}
+ 
+21、2005年11月23日慧通笔试题：写一函数判断某个整数是否为回文数，如12321为回文数。可以用判断入栈和出栈是否相同来实现（略微复杂些），这里是将整数逆序后形成另一整数，判断两个整数是否相等来实现的。
+#include "stdafx.h"
+int IsEchoNum(int num) {
+     int tmp = 0;
+     for(int n = num; n; n/=10)
+         tmp = tmp *10 + n%10;
+     return tmp==num;
+}
+ 
+int main(int argc, char* argv[]) {
+     int num = 12321;
+     printf("%d  %d\n", num, IsEchoNum(num));
+}
+ 
+22、删除字符串中的数字并压缩字符串（神州数码以前笔试题），如字符串”abc123de4fg56”处理后变为”abcdefg”。注意空间和效率。（下面的算法只需要一次遍历，不需要开辟新空间，时间复杂度为O(N)）
+#include "stdafx.h"
+void delNum(char *str) {
+     int i, j=0;
+// 找到串中第一个数字的位子
+     for(i=j=0; str[i] && (str[i]<'0' || str[i]>'9'); j=++i);
+     
+     // 从串中第一个数字的位置开始，逐个放入后面的非数字字符
+     for(; str[i]; i++)          
+          if(str[i]<'0' || str[i]>'9') 
+              str[j++] = str[i];
+     str[j] = '\0';
+}
+ 
+int main(int argc, char* argv[]) {
+     char str[] = "abc123ef4g4h5";
+     printf("%s\n", str);
+     delNum(str);
+     printf("%s\n", str);
+}
+ 
+23、求两个串中的第一个最长子串（神州数码以前试题）。如"abractyeyt","dgdsaeactyey"的最大子串为"actyet"。
+#include "stdafx.h"
+char *MaxSubString(char *str1, char *str2) {
+     int i, j, k, index, max=0;
+     for(i=0; str1[i]; i++)
+         for(j=0; str2[j]; j++) {
+              for(k=0; str1[i+k]==str2[j+k] && (str2[i+k] || str1[i+k]); k++);
+              if(k>max) {        // 出现大于当前子串长度的子串，则替换子串位置和程度
+                   index = j;    max = k;
+              }
+         }
+     char *strResult = (char *)calloc(sizeof(char), max+1);
+     for(i=0; i<max; i++)        
+         strResult[i] = str2[index++];
+     return strResult;
+}
+ 
+int main(int argc, char* argv[]) {
+     char str1[] = "abractyeyt", str2[] = "dgdsaeactyey";
+     char *strResult = MaxSubString(str1, str2);
+     printf("str1=%s\nstr2=%s\nMaxSubString=%s\n", str1, str2, strResult);
+}
+ 
+24、不开辟用于交换数据的临时空间，如何完成字符串的逆序(在技术一轮面试中，有些面试官会这样问)
+#include "stdafx.h"
+void change(char *str) {
+     for(int i=0,j=strlen(str)-1; i<j; i++, j--){
+         str[i] ^= str[j] ^= str[i] ^= str[j];
+     }
+}
+int main(int argc, char* argv[]) {
+     char str[] = "abcdefg";
+     printf("strSource=%s\n", str);
+     change(str);
+     printf("strResult=%s\n", str);
+     return getchar();
+}
+ 
+25、删除串中指定的字符（做此题时，千万不要开辟新空间，否则面试官可能认为你不适合做嵌入式开发）
+#include "stdafx.h"
+void delChar(char *str, char c) {
+     int i, j=0;
+     for(i=0; str[i]; i++)
+         if(str[i]!=c) str[j++]=str[i];
+     str[j] = '\0';
+}
+ 
+int main(int argc, char* argv[]) {
+     char str[] = "abcdefgh";    // 注意，此处不能写成char *str = "abcdefgh";
+     printf("%s\n", str);
+     delChar(str, 'c');
+     printf("%s\n", str);
+}
+ 
+26、判断单链表中是否存在环（网上说的笔试题）
+#include "stdafx.h"
+typedef char eleType;                // 定义链表中的数据类型
+typedef struct listnode {            // 定义单链表结构
+     eleType data;
+     struct listnode *next;
+}node;
+ 
+node *create(int n) {                 // 创建单链表，n为节点个数
+     node *p = (node *)malloc(sizeof(node));   
+     node *head = p;    head->data = 'A';
+     for(int i='B'; i<'A'+n; i++) {
+         p = (p->next = (node *)malloc(sizeof(node)));
+         p->data = i;
+         p->next = NULL;
+     }
+     return head;
+}
+ 
+void addCircle(node *head, int n) {  // 增加环，将链尾指向链中第n个节点
+     node *q, *p = head;
+     for(int i=1; p->next; i++) {
+         if(i==n) q = p;
+          p = p->next;
+     }
+     p->next = q;
+}
+ 
+int isCircle(node *head) {           // 这是笔试时需要写的最主要函数，其他函数可以不写
+     node *p=head,*q=head; 
+     while( p->next && q->next) { 
+         p = p->next;
+         if (NULL == (q=q->next->next))   return 0;
+         if (p == q)   return 1;
+     }
+     return 0; 
+}
+ 
+int main(int argc, char* argv[]) {
+     node *head = create(12);
+     addCircle(head, 8);              // 注释掉此行，连表就没有环了
+     printf("%d\n", isCircle(head));
+}
+中就可以调用C++的函数了。
+  
+试题5：编写一个函数，作用是把一个char组成的字符串循环右移n个。比如原来是“abcdefghi”如果n=2，移位后应该是“hiabcdefgh” 
+函数头是这样的：
+//pStr是指向以'\0'结尾的字符串的指针
+//steps是要求移动的n
+void LoopMove ( char * pStr, int steps )
+{
+　//请填充...
+} 
+解答：
+正确解答1：
+ 
+正确解答1：
+  
+void LoopMove ( char *pStr, int steps )
+{
+　 int n = strlen( pStr ) - steps;
+　 char tmp[MAX_LEN]; 
+　 strcpy ( tmp, pStr + n ); 
+　 strcpy ( tmp + steps, pStr); 
+　 *( tmp + strlen ( pStr ) ) = '\0';
+　 strcpy( pStr, tmp );
+} 
+ 
+正确解答2：
+  
+void LoopMove ( char *pStr, int steps )
+{
+　 int n = strlen( pStr ) - steps;
+　 char tmp[MAX_LEN]; 
+　 memcpy( tmp, pStr + n, steps ); 
+　 memcpy(pStr + steps, pStr, n ); 
+　 memcpy(pStr, tmp, steps ); 
+}
+
+剖析：
+这个试题主要考查面试者对标准库函数的熟练程度，在需要的时候引用库函数可以很大程度上简化程序编写的工作量。
+最频繁被使用的库函数包括：
+(1) strcpy
+(2) memcpy
+(3) memset
+试题6：已知WAV文件格式如下表，打开一个WAV文件，以适当的数据结构组织WAV文件头并解析WAV格式的各项信息。
+WAVE文件格式说明表
+偏移地址 字节数 数据类型 内 容 
+文件头 
+00H 4 Char "RIFF"标志 
+04H 4 int32 文件长度 
+08H 4 Char "WAVE"标志 
+0CH 4 Char "fmt"标志 
+10H 4   过渡字节（不定） 
+14H 2 int16 格式类别 
+16H 2 int16 通道数 
+18H 2 int16 采样率（每秒样本数），表示每个通道的播放速度 
+1CH 4 int32 波形音频数据传送速率 
+20H 2 int16 数据块的调整数（按字节算的） 
+22H 2   每样本的数据位数 
+24H 4 Char 数据标记符＂data＂ 
+28H 4 int32 语音数据的长度 
+解答：
+将WAV文件格式定义为结构体WAVEFORMAT： 
+ 
+typedef struct tagWaveFormat
+{ 
+　 char cRiffFlag[4]; 
+　 UIN32 nFileLen; 
+　 char cWaveFlag[4]; 
+　 char cFmtFlag[4]; 
+　 char cTransition[4]; 
+　 UIN16 nFormatTag ; 
+　 UIN16 nChannels; 
+　 UIN16 nSamplesPerSec; 
+　 UIN32 nAvgBytesperSec; 
+　 UIN16 nBlockAlign; 
+　 UIN16 nBitNumPerSample; 
+　 char cDataFlag[4]; 
+　 UIN16 nAudioLength; 
+} WAVEFORMAT; 
+假设WAV文件内容读出后存放在指针buffer开始的内存单元内，则分析文件格式的代码很简单，为：
+WAVEFORMAT waveFormat;
+memcpy( &waveFormat, buffer,sizeof( WAVEFORMAT ) ); 
+直接通过访问waveFormat的成员，就可以获得特定WAV文件的各项格式信息。
+剖析：
+试题6考查面试者组织数据结构的能力，有经验的程序设计者将属于一个整体的数据成员组织为一个结构体，利用指针类型转换，可以将memcpy、memset等函数直接用于结构体地址，进行结构体的整体操作。 透过这个题可以看出面试者的程序设计经验是否丰富。
+
+试题7：编写类String的构造函数、析构函数和赋值函数，已知类String的原型为：
+
+class String
+{ 
+　public: 
+　　String(const char *str = NULL); // 普通构造函数 
+
+　　String(const String &other); // 拷贝构造函数 
+
+　　~ String(void); // 析构函数 
+
+　　String & operate =(const String &other); // 赋值函数 
+
+　private: 
+　　char *m_data; // 用于保存字符串 
+
+};
+解答：
+
+ 
+解答：
+  
+//普通构造函数
+
+
+String::String(const char *str) 
+{
+　if(str==NULL) 
+　{
+　　m_data = new char[1]; // 得分点：对空字符串自动申请存放结束标志'\0'的空
+
+　　//加分点：对m_data加NULL 判断
+
+　　*m_data = '\0'; 
+　} 
+　else
+　{
+　　int length = strlen(str); 
+　　m_data = new char[length+1]; // 若能加 NULL 判断则更好 
+
+　　strcpy(m_data, str); 
+　}
+}
+
+// String的析构函数
+
+
+String::~String(void) 
+{
+　delete [] m_data; // 或delete m_data;
+
+}
+
+//拷贝构造函数
+
+
+String::String(const String &other) 　　　// 得分点：输入参数为const型
+
+{ 
+　int length = strlen(other.m_data); 
+　m_data = new char[length+1]; 　　　　//加分点：对m_data加NULL 判断
+
+　strcpy(m_data, other.m_data); 
+}
+
+//赋值函数
+
+
+String & String::operate =(const String &other) // 得分点：输入参数为const型
+
+{ 
+　if(this == &other) 　　//得分点：检查自赋值
+
+　　return *this; 
+　delete [] m_data; 　　　　//得分点：释放原有的内存资源
+
+　int length = strlen( other.m_data ); 
+　m_data = new char[length+1]; 　//加分点：对m_data加NULL 判断
+
+　strcpy( m_data, other.m_data ); 
+　return *this; 　　　　　　　　//得分点：返回本对象的引用
+
+} 
+试题8：请说出static和const关键字尽可能多的作用
+解答：
+static关键字至少有下列n个作用：
+(1) 函数体内static变量的作用范围为该函数体，不同于auto变量，该变量的内存只被分配一次，因此其值在下次调用时仍维持上次的值；
+(2) 在模块内的static全局变量可以被模块内所用函数访问，但不能被模块外其它函数访问；
+(3) 在模块内的static函数只可被这一模块内的其它函数调用，这个函数的使用范围被限制在声明它的模块内；
+(4) 在类中的static成员变量属于整个类所拥有，对类的所有对象只有一份拷贝；
+(5) 在类中的static成员函数属于整个类所拥有，这个函数不接收this指针，因而只能访问类的static成员变量。
+const关键字至少有下列n个作用：
+(1) 欲阻止一个变量被改变，可以使用const关键字。在定义该const变量时，通常需要对它进行初始化，因为以后就没有机会再去改变它了(2) 对指针来说，可以指定指针本身为const，也可以指定指针所指的数据为const，或二者同时指定为const；
+(3) 在一个函数声明中，const可以修饰形参，表明它是一个输入参数，在函数内部不能改变其值；
+(4) 对于类的成员函数，若指定其为const类型，则表明其是一个常函数，不能修改类的成员变量；
+(5) 对于类的成员函数，有时候必须指定其返回值为const类型，以使得其返回值不为“左值”。例如：
+const classA operator*(const classA& a1,const classA& a2); 
+operator*的返回结果必须是一个const对象。如果不是，这样的变态代码也不会编译出错：
+classA a, b, c;
+(a * b) = c; // 对a*b的结果赋值 
+操作(a * b) = c显然不符合编程者的初衷，也没有任何意义。
+剖析：
+  小小的static和const居然有这么多功能，我们能回答几个？如果只能回答1~2个，那还真得闭关再好好修炼修炼。这个题可以考查面试者对程序设计知识的掌握程度是初级、中级还是比较深入，没有一定的知识广度和深度，不可能对这个问题给出全面的解答。大多数人只能回答出static和const关键字的部分功能。
+题目出处：http://blog.rainbud.net/article/entry20050928-014721
+给定一单链表的表头指针和指向其中一个节点的指针，要求以该指针为头将原链表逆序排列，例如：
+1. N1->N2->N3->N4->N5->NULL  pHEAD = N1，pSTART = N3，返回N3->N2->N1->N5->N4->NULL
+2. N1->N2->N3->N4->N5->NULL  pHEAD = N1，pSTART = N5，返回N5->N4->N3->N2->N1->NULL
+3. N1->N2->N3->N4->N5->NULL  pHEAD = N1，pSTART = N1，返回N1->N5->N4->N3->N2->NULL
+不允许额外分配存储空间，不允许递归，可以使用临时变量。
+很容易想到的做法是先将整个链表逆序，然后将尾节点连接到头节点，然后再从pSTART后面断开。我是把它分成两个部分，即包括pSTART的前面部分和不包括pSTART的后面部分。当pSTART和pHEAD重合时，前面一部分只有一个节点；当pSTART是链表的尾节点的时候，后面一部分是空链表。分别逆序完了以后，再连接起来。
+前面有道题说了，使用pHead和两个临时变量就可以将一个链表逆序，我这里没有使用phead,所以用到了三个临时变量。里面用的临时变量比较多，思路不太清晰。
+＃i nclude <iostream>
+＃i nclude <string> 
+using namespace std;
+
+struct Node
+{
+    char name[3];
+    Node * next;
+    Node(const char* p)
+    {
+        strcpy(name,p);
+        next=0;
+    }
+};
+
+//将某个链表逆序
+void ReserseList(Node *& pHead, Node *& pTail)
+{
+    Node *p1=pHead;
+    if(p1==0) //首指针为空，表示空链表
+{
+        pTail=0;
+        return;
+    }
+
+    Node *p2=p1->next;
+    if(p2==0) //首指针的下一个节点为空，表示只有一个节点
+{
+        pTail=0;
+        return;
+    }
+
+    //至少有两个不为空的节点
+Node *p3=0; 
+    while(p2!=0)
+    {
+        p3=p2->next;
+        p2->next=p1;
+        p1=p2;
+        p2=p3;
+        p3=0;
+    }
+    pHead->next=0; //将首节点的next置为0，否则会形成循环链表
+pTail=pHead;
+    pHead=p1;
+}
+
+//分成两个链表，然后再合并
+Node * Reserse(Node * pHEAD, Node * pSTART)
+{
+    Node *ptmp1=pHEAD, *ptmp2=pSTART;
+
+    //将两表拆开
+Node *pHead2=pSTART->next;
+    pSTART->next=0;
+
+    ReserseList(ptmp1,ptmp2);//逆序前面一部分
+Node *ptmp3=0;
+
+    ReserseList(pHead2,ptmp3);//逆序后面一部分
+
+    //合并
+if(ptmp2==0)//前面一部分只有一个节点
+ptmp1->next=pHead2;
+    else//前面一部分有一个以上的节点
+ptmp2->next=pHead2;
+    return ptmp1;
+}
+
+void output(Node * tmp)
+{
+    while(tmp!=0)
+    {
+        cout<<tmp->name<<"->";
+        tmp=tmp->next;
+    }
+    cout<<"NULL"<<endl;
+}
+
+int main()
+{
+    Node * pHEAD=new Node("N1");
+    Node * p2=new Node("N2");
+    Node * p3=new Node("N3");
+    Node * p4=new Node("N4");
+    Node * p5=new Node("N5");
+    pHEAD->next=p2;
+    p2->next=p3;
+    p3->next=p4;
+    p4->next=p5;
+
+    output(pHEAD);
+    Node * result=Reserse(pHEAD,p4);
+    output(result);
+
+    getchar();
+    return 0;
+}
+ 
+题目在：http://post.baidu.com/f?kz=70481398
+统计字母个数:
+程序输入一个字符串(长度不超过100),全是小写字母.
+统计小写字母出现的次数,并用要求的图表示出来.
+测试数据:
+Input:
+sadjhasdhqwpopeepomcxnnbladkjkfjasjas
+Output:
+@
+@                 @                 @
+@     @           @           @     @
+@     @ @     @   @ @     @ @ @     @
+@ @ @ @ @ @   @   @ @ @ @ @ @ @ @   @       @ @
+a b c d e f g h i j k l m n o p q r s t u v w x y z
+ 
+注意:
+在字符串中每个小写字母的个数不会超过20个.
+编程语言:C/C++.
+_________________________________________________
+题目意思就是每个字母有多少个，上面就输出多少@。我用一个长度为26的数组(数组int count[26])来保存每个字母的个数，然后用一个26*20(因为说了每个字母个数都不超过20个)的数组(数组chars)来记录最后输出的结果，这个数组中的刚开始初始化为空字符，每次碰到一个字母就将其赋值为@，最后只要把这个数组从最高的一排向下输出就得到结果了，但是上面好多排都可能是空字符，要从第一排含有至少一个非空字符(即@)的向下输出，所以我用了一个变量(int max_count)来记录这一排的位置。程序如下：
+
+＃i nclude <iostream> 
+using namespace std;
+
+#define COUNT 20
+
+void output(char *p)
+{
+    char chars[26][COUNT];
+    for(int i=0;i<26;i++)
+        for(int j=0;j<COUNT;j++)
+            chars[i][j]=' ';
+
+    int count[26];
+    for(int i=0;i<26;i++)
+        count[i]=0;
+
+    int max_count=0;
+    int index=0;
+    int tmp=0;
+    while(*p!='\0')
+    {
+        index=*p-'a';
+        tmp=++count[index];
+        if(max_count<tmp)
+            max_count=tmp;
+        chars[index][tmp-1]='@';
+        p++;
+    }
+
+    for(int i=max_count-1;i>=0;i--)
+    {
+        for(int j=0;j<26;j++)
+            cout<<chars[j][i];
+        cout<<endl;
+    }
+    for(char i='a';i<='z';i++)
+        cout<<i;
+}
+
+int main()
+{
+    char *str="sadjhasdhqwpopeepomcxnnbladkjkfjasjas",*p=str;
+    output(p);
+    getchar();
+    return 0;
+}
+把二进制数当成数组进行左移运算的，没隔四位要输出一个空格，我在这里看到此题：
+一个给定的数值由左边开始升位到右边第N位，如 
+0010<<1 == 0100 
+或者 
+0001 0011<<4 == 0011 0000 
+请用C或者C++或者其他X86上能运行的程序实现。
+题目要求是可以对带格式的（4位一空格）二进制数进行位操作。
+接收带有空格的输入可以用cin.getline()函数，要求一个字符数组作为参数，以及最多能接收的长度和以及一个表示结尾的字符。此题没有什么特别之处，就是记住在输出的时候每四位一个空格，并且要忽略输入行中的空格。我的算法复杂度为O(n):
+＃i nclude <iostream> 
+using namespace std;
+
+void Convert(char* input,int num)
+{
+    int j=0;
+    for(int i=num+num/4;input[i]!='\0';i++)
+    {
+        if(input[i]==' ')
+            continue;
+        cout<<input[i];
+        if(++j%4==0)
+            cout<<" ";
+    }
+    for(int i=0;i<num;i++)
+    {
+        cout<<"0";
+        if((++j%4==0)&&(i<num-1))
+            cout<<" ";
+    }
+}
+
+int main()
+{
+    char input[100];
+    cout<<"input string:";
+    cin.getline(input,100,'\n');
+    int num;
+    cout<<"input number:";
+    cin>>num;
+    Convert(input,num);
+    getchar();
+    getchar();
+    return 0;
+}
+
+
+
+1.new、delete、malloc、free关系  delete会调用对象的析构函数,和new对应free只会释放内存，new调用构造函数。malloc与free是C++/C语言的标准库函数，new/delete是C++的运算符。它们都可用于申请动态内存和释放内存。对于非内部数据类型的对象而言，光用maloc/free无法满足动态对象的要求。对象在创建的同时要自动执行构造函数，对象在消亡之前要自动执行析构函数。由于malloc/free是库函数而不是运算符，不在编译器控制权限之内，不能够把执行构造函数和析构函数的任务强加于malloc/free。因此C++语言需要一个能完成动态内存分配和初始化工作的运算符new，以及一个能完成清理与释放内存工作的运算符delete。注意new/delete不是库函数。
+
+  2.delete与 delete []区别  delete只会调用一次析构函数，而delete[]会调用每一个成员的析构函数。在More Effective  C++中有更为详细的解释：“当delete操作符用于数组时，它为每个数组元素调用析构函数，然后调用operatordelete来释放内存。”delete与New配套，delete []与new []配套    MemTest*mTest1=newMemTest[10];    MemTest*mTest2=newMemTest;   int*pInt1=newint[10];   int*pInt2=newint;    delete[]pInt1;  //-1-    delete[]pInt2;  //-2-    delete[]mTest1;//-3-    delete[]mTest2;//-4-   在-4-处报错。  这就说明：对于内建简单数据类型，delete和delete[]功能是相同的。对于自定义的复杂数据类型，delete和delete[]不能互用。delete[]删除一个数组，delete删除一个指针简单来说，用new分配的内存用delete删除用new[]分配的内存用delete[]删除delete[]会调用数组元素的析构函数。内部数据类型没有析构函数，所以问题不大。如果你在用delete时没用括号，delete就会认为指向的是单个对象，否则，它就会认为指向的是一个数组。 
+
+ 3.C C++ JAVA共同点，不同之处？
+
+ 4.继承优缺点。  类继承是在编译时刻静态定义的，且可直接使用，类继承可以较方便地改变父类的实现。但是类继承也有一些不足之处。首先，因为继承在编译时刻就定义了，所以无法在运行时刻改变从父类继承的实现。更糟的是，父类通常至少定义了子类的部分行为，父类的任何改变都可能影响子类的行为。如果继承下来的实现不适合解决新的问题，则父类必须重写或被其他更适合的类替换。这种依赖关系限制了灵活性并最终限制了复用性。  （待补充）   
+
+5.C++有哪些性质（面向对象特点）  封装，继承和多态。  在面向对象程序设计语言中，封装是利用可重用成分构造软件系统的特性，它不仅支持系统的可重用性，而且还有利于提高系统的可扩充性；消息传递可以实现发送一个通用的消息而调用不同的方法；封装是实现信息隐蔽的一种技术，其目的是使类的定义和实现分离。 
+
+ 6.子类析构时要调用父类的析构函数吗？  析构函数调用的次序是先派生类的析构后基类的析构，也就是说在基类的的析构调用的时候,派生类的信息已经全部销毁了定义一个对象时先调用基类的构造函数、然后调用派生类的构造函数；析构的时候恰好相反：先调用派生类的析构函数、然后调用基类的析构函数JAVA无析构函数深拷贝和浅拷贝   
+
+7.多态，虚函数，纯虚函数    
+
+9.什么是“引用”？申明和使用“引用”要注意哪些问题？  答：引用就是某个目标变量的“别名”(alias)，对应用的操作与对变量直接操作效果完全
+
+3. 回答下面的问题. (4分)
+ (4). switch()中不允许的数据类型是?
+答：实型
+
+6.MFC中CString是类型安全类么？
+答：不是，其它数据类型转换到CString可以使用CString的成员函数Format来转换
+
+8.CSingleLock是干什么的。
+答：同步多个线程对一个数据类的同时访问
+
+9.NEWTEXTMETRIC 是什么。
+答：物理字体结构，用来设置字体的高宽大小
+
+10.程序什么时候应该使用线程，什么时候单线程效率高。
+答：1．耗时的操作使用线程，提高应用程序响应
+2．并行操作时使用线程，如C/S架构的服务器端并发线程响应用户的请求。
+3．多CPU系统中，使用线程提高CPU利用率
+4．改善程序结构。一个既长又复杂的进程可以考虑分为多个线程，成为几个独立或半独
+立的运行部分，这样的程序会利于理解和修改。
+其他情况都使用单线程。
+
+11.Windows是内核级线程么。
+答：见下一题
+
+12.Linux有内核级线程么。
+答：线程通常被定义为一个进程中代码的不同执行路线。从实现方式上划分，线程有两
+种类型：“用户级线程”和“内核级线程”。 用户线程指不需要内核支持而在用户程序
+中实现的线程，其不依赖于操作系统核心，应用进程利用线程库提供创建、同步、调度
+和管理线程的函数来控制用户线程。这种线程甚至在象 DOS 这样的操作系统中也可实现
+，但线程的调度需要用户程序完成，这有些类似 Windows 3.x 的协作式多任务。另外一
+种则需要内核的参与，由内核完成线程的调度。其依赖于操作系统核心，由内核的内部
+需求进行创建和撤销，这两种模型各有其好处和缺点。用户线程不需要额外的内核开支
+，并且用户态线程的实现方式可以被定制或修改以适应特殊应用的要求，但是当一个线
+程因 I/O 而处于等待状态时，整个进程就会被调度程序切换为等待状态，其他线程得不
+到运行的机会；而内核线程则没有各个限制，有利于发挥多处理器的并发优势，但却占
+用了更多的系统开支。 
+Windows NT和OS/2支持内核线程。Linux 支持内核级的多线程
+
+14.使用线程是如何防止出现大的波峰。
+答：意思是如何防止同时产生大量的线程，方法是使用线程池，线程池具有可以同时提
+高调度效率和限制资源使用的好处，线程池中的线程达到最大数时，其他线程就会排队
+等候。
+
+15函数模板与类模板有什么区别？
+答：函数模板的实例化是由编译程序在处理函数调用时自动完成的，而类模板的实例化
+必须由程序员在程序中显式地指定。
+
+16一般数据库若出现日志满了，会出现什么情况，是否还能使用？
+答：只能执行查询等读操作，不能执行更改，备份等写操作，原因是任何写操作都要记
+录日志。也就是说基本上处于不能使用的状态。
+
+17 SQL Server是否支持行级锁，有什么好处？
+答：支持，设立封锁机制主要是为了对并发操作进行控制，对干扰进行封锁，保证数据
+的一致性和准确性，行级封锁确保在用户取得被更新的行到该行进行更新这段时间内不
+被其它用户所修改。因而行级锁即可保证数据的一致性又能提高数据操作的迸发性。
+
+18如果数据库满了会出现什么情况，是否还能使用？
+答：见16
+
+19 关于内存对齐的问题以及sizof()的输出 
+答：编译器自动对齐的原因：为了提高程序的性能，数据结构（尤其是栈）应该尽可能
+地在自然边界上对齐。原因在于，为了访问未对齐的内存，处理器需要作两次内存访问
+；然而，对齐的内存访问仅需要一次访问。
+
+21.对数据库的一张表进行操作,同时要对另一张表进行操作,如何实现?
+答：将操作多个表的操作放入到事务中进行处理
+
+22.TCP/IP 建立连接的过程?(3-way shake)
+答：在TCP/IP协议中，TCP协议提供可靠的连接服务，采用三次握手建立一个连接。
+　　第一次握手：建立连接时，客户端发送syn包(syn=j)到服务器，并进入SYN_SEND状
+态，等待服务器确认；
+第二次握手：服务器收到syn包，必须确认客户的SYN（ack=j+1），同时自己也发送一个
+SYN包（syn=k），即SYN+ACK包，此时服务器进入SYN_RECV状态；
+　　第三次握手：客户端收到服务器的SYN＋ACK包，向服务器发送确认包ACK(ack=k+1)
+，此包发送完毕，客户端和服务器进入ESTABLISHED状态，完成三次握手。
+
+23.ICMP是什么协议,处于哪一层?
+答：Internet控制报文协议，处于网络层（IP层）
+
+24.触发器怎么工作的?
+答：触发器主要是通过事件进行触发而被执行的，当对某一表进行诸如UPDATE、 INSERT
+、 DELETE 这些操作时，数据库就会自动执行触发器所定义的SQL 语句，从而确保对数
+据的处理必须符合由这些SQL 语句所定义的规则。
+
+25.winsock建立连接的主要实现步骤?
+答：服务器端：socker()建立套接字，绑定（bind）并监听（listen），用accept（）
+等待客户端连接。
+客户端：socker()建立套接字，连接（connect）服务器，连接上后使用send()和recv（
+），在套接字上写读数据，直至数据交换完毕，closesocket()关闭套接字。
+服务器端：accept（）发现有客户端连接，建立一个新的套接字，自身重新开始等待连
+接。该新产生的套接字使用send()和recv（）写读数据，直至数据交换完毕，closesock
+et()关闭套接字。
+
+27.IP组播有那些好处?
+答：Internet上产生的许多新的应用，特别是高带宽的多媒体应用，带来了带宽的急剧
+消耗和网络拥挤问题。组播是一种允许一个或多个发送者（组播源）发送单一的数据包
+到多个接收者（一次的，同时的）的网络技术。组播可以大大的节省网络带宽，因为无
+论有多少个目标地址，在整个网络的任何一条链路上只传送单一的数据包。所以说组播
+技术的核心就是针对如何节约网络资源的前提下保证服务质量。
+
+7.什么函数不能声明为虚函数？
+      constructor函数不能声明为虚函数。
+
+11.Internet物理地址和IP地址转换采用什么协议？
+      ARP (Address Resolution Protocol)（地址解析協議）
+
+12.IP地址的编码分为哪俩部分？
+     IP地址由两部分组成，网络号和主机号。不过是要和“子网掩码”按位与上之后才能区分哪些是网络位哪些是主机位。
+
+2.用两个栈实现一个队列的功能？要求给出算法和思路！
+设2个栈为A,B, 一开始均为空.
+
+入队:
+将新元素push入栈A;
+
+出队:
+(1)判断栈B是否为空；
+(2)如果不为空，则将栈A中所有元素依次pop出并push到栈B；
+(3)将栈B的栈顶元素pop出；
+
+这样实现的队列入队和出队的平摊复杂度都还是O(1), 比上面的几种方法要好。
+
+  3.直接链接两个信令点的一组链路称作什么?
+PPP点到点连接
+
+  4.接入网用的是什么接口?
+
+  5.voip都用了那些协议?
+
+1．进程和线程的差别。
+线程是指进程内的一个执行单元,也是进程内的可调度实体.
+与进程的区别:
+(1)调度：线程作为调度和分配的基本单位，进程作为拥有资源的基本单位
+(2)并发性：不仅进程之间可以并发执行，同一个进程的多个线程之间也可并发执行
+(3)拥有资源：进程是拥有资源的一个独立单位，线程不拥有系统资源，但可以访问隶属于进程的资源. 
+(4)系统开销：在创建或撤消进程时，由于系统都要为之分配和回收资源，导致系统的开销明显大于创建或撤消线程时的开销。
+
+9．给两个变量，如何找出一个带环单链表中是什么地方出现环的？
+一个递增一，一个递增二，他们指向同一个接点时就是环出现的地方
+10．在IA32中一共有多少种办法从用户态跳到内核态？
+通过调用门，从ring3到ring0，中断从ring3到ring0，进入vm86等等
+11．如果只想让程序有一个实例运行，不能运行两个。像winamp一样，只能开一个窗口，怎样实现？
+用内存映射或全局原子（互斥变量）、查找窗口句柄.. 
+FindWindow，互斥，写标志到文件或注册表,共享内存。.　  
+12．如何截取键盘的响应，让所有的‘a’变成‘b’？
+键盘钩子SetWindowsHookEx
+　13．Apartment在COM中有什么用？为什么要引入？
+　14．存储过程是什么？有什么用？有什么优点？
+我的理解就是一堆sql的集合，可以建立非常复杂的查询，编译运行，所以运行一次后，以后再运行速度比单独执行SQL快很多
+　15．Template有什么特点？什么时候用？
+16．谈谈Windows DNA结构的特点和优点。
+
+
+网络编程中设计并发服务器，使用多进程 与 多线程 ，请问有什么区别？
+1，进程：子进程是父进程的复制品。子进程获得父进程数据空间、堆和栈的复制品。
+2，线程：相对与进程而言，线程是一个更加接近与执行体的概念，它可以与同进程的其他线程共享数据，但拥有自己的栈空间，拥有独立的执行序列。
+两者都可以提高程序的并发度，提高程序运行效率和响应时间。
+线程和进程在使用上各有优缺点：线程执行开销小，但不利于资源管理和保护；而进程正相反。同时，线程适合于在SMP机器上运行，而进程则可以跨机器迁移。
+
+
+3.c和c++中的struct有什么不同？
+c和c++中struct的主要区别是c中的struct不可以含有成员函数，而c++中的struct可以。c++中struct和class的主要区别在于默认的存取权限不同，struct默认为public，而class默认为private
+
+1）读文件file1.txt的内容（例如）：
+12
+34
+56
+输出到file2.txt：
+56
+34
+12
+（逆序）
+2）输出和为一个给定整数的所有组合
+例如n=5
+5=1+4；5=2+3（相加的数不能重复）
+则输出
+1，4；2，3。
+望高手赐教！！
+
+第一题,注意可增长数组的应用.
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void)
+{
+         int MAX = 10;
+int *a = (int *)malloc(MAX * sizeof(int));
+int *b;
+    
+FILE *fp1;
+FILE *fp2;
+
+fp1 = fopen("a.txt","r");
+if(fp1 == NULL)
+{printf("error1");
+    exit(-1);
+}
+
+    fp2 = fopen("b.txt","w");
+if(fp2 == NULL)
+{printf("error2");
+    exit(-1);
+}
+
+int i = 0;
+    int j = 0;
+
+while(fscanf(fp1,"%d",&a[i]) != EOF)
+{
+i++;
+j++;
+if(i >= MAX)
+{
+MAX = 2 * MAX;
+b = (int*)realloc(a,MAX * sizeof(int));
+if(b == NULL)
+{
+printf("error3");
+exit(-1);
+}
+a = b;
+}
+}
+
+for(;--j >= 0;)
+   fprintf(fp2,"%d\n",a[j]);
+
+fclose(fp1);
+fclose(fp2);
+
+return 0;
+}
+
+第二题.
+#include <stdio.h>
+
+int main(void)
+{
+unsigned long int i,j,k;
+
+printf("please input the number\n");
+scanf("%d",&i);
+    if( i % 2 == 0)
+        j = i / 2;
+else
+j = i / 2 + 1;
+
+printf("The result is \n");
+    for(k = 0; k < j; k++)
+     printf("%d = %d + %d\n",i,k,i - k);
+return 0;
+}
+
+#include <stdio.h>
+void main()
+{
+unsigned long int a,i=1;
+scanf("%d",&a);
+if(a%2==0)
+{
+     for(i=1;i<a/2;i++)
+     printf("%d",a,a-i);
+}
+else
+for(i=1;i<=a/2;i++)
+        printf(" %d, %d",i,a-i);
+}
+
+兄弟,这样的题目若是做不出来实在是有些不应该, 给你一个递规反向输出字符串的例子,可谓是反序的经典例程.
+
+void inverse(char *p)
+{
+    if( *p = = '\0' ) 
+return;
+    inverse( p+1 );
+    printf( "%c", *p );
+}
+
+int main(int argc, char *argv[])
+{
+    inverse("abc\0");
+
+    return 0;
+}
+
+借签了楼上的“递规反向输出”
+#include <stdio.h>
+void test(FILE *fread, FILE *fwrite)
+{
+        char buf[1024] = {0};
+        if (!fgets(buf, sizeof(buf), fread))
+                return;
+        test( fread, fwrite );
+        fputs(buf, fwrite);
+}
+int main(int argc, char *argv[])
+{
+        FILE *fr = NULL;
+        FILE *fw = NULL;
+        fr = fopen("data", "rb");
+        fw = fopen("dataout", "wb");
+        test(fr, fw);
+        fclose(fr);
+        fclose(fw);
+        return 0;
+}
+
+
+今天早上的面试题9道，比较难，向牛人请教，国内的一牛公司，坐落在北京北四环某大厦：
+1、线形表a、b为两个有序升序的线形表，编写一程序，使两个有序线形表合并成一个有序升序线形表h；
+答案在 请化大学 严锐敏《数据结构第二版》第二章例题，数据结构当中，这个叫做：两路归并排序
+Linklist *unio(Linklist *p,Linklist *q){
+linklist *R,*pa,*qa,*ra;
+pa=p;
+qa=q;
+R=ra=p;
+while(pa->next!=NULL&&qa->next!=NULL){
+if(pa->data>qa->data){
+ra->next=qa;
+qa=qa->next;
+}
+else{
+ra->next=pa;
+pa=pa->next;
+}
+}
+if(pa->next!=NULL)
+ra->next=pa;
+if(qa->next!=NULL)
+ra->next==qa;
+return R;
+}
+
+2、运用四色定理，为N个局域举行配色，颜色为1、2、3、4四种，另有数组adj[][N]，如adj[i][j]=1则表示i区域与j区域相邻，数组color[N]，如color[i]=1,表示i区域的颜色为1号颜色。
+四色填充
+
+4、编写算法，从10亿个浮点数当中，选出其中最大的10000个。
+用外部排序，在《数据结构》书上有
+《计算方法导论》在找到第n大的数的算法上加工
+5、编写一unix程序，防止僵尸进程的出现.
+
+同学的4道面试题，应聘的职位是搜索引擎工程师，后两道超级难，（希望大家多给一些算发）
+1.给两个数组和他们的大小，还有一动态开辟的内存，求交集，把交集放到动态内存dongtai，并且返回交集个数
+long jiaoji(long* a[],long b[],long* alength,long blength,long* dongtai[])
+2.单连表的建立，把'a'--'z'26个字母插入到连表中，并且倒叙，还要打印！
+方法1：
+typedef struct val
+{   int date_1;
+    struct val *next;
+}*p;
+
+void main(void)
+{   char c;
+     
+    for(c=122;c>=97;c--)
+       { p.date=c;
+         p=p->next;
+        }
+
+    p.next=NULL;
+} 
+}
+方法2：
+node *p = NULL;
+node *q = NULL;
+
+node *head = (node*)malloc(sizeof(node));
+head->data = ' ';head->next=NULL;
+
+node *first = (node*)malloc(sizeof(node));
+first->data = 'a';first->next=NULL;head->next = first;
+p = first;
+
+int longth = 'z' - 'b';
+int i=0;
+while ( i<=longth )
+{
+node *temp = (node*)malloc(sizeof(node));
+temp->data = 'b'+i;temp->next=NULL;q=temp;
+
+head->next = temp; temp->next=p;p=q;
+i++;
+}
+
+print(head);
+
+3.可怕的题目终于来了
+象搜索的输入信息是一个字符串，统计300万输入信息中的最热门的前十条，我们每次输入的一个字符串为不超过255byte,内存使用只有1G,
+请描述思想，写出算发（c语言），空间和时间复杂度，
+4.国内的一些帖吧，如baidu,有几十万个主题，假设每一个主题都有上亿的跟帖子，怎么样设计这个系统速度最好，请描述思想，写出算发（c语言），空间和时间复杂度，
+
+
+
+1. 写一个函数,它的原形是int continumax(char *outputstr,char *intputstr)
+功能：
+在字符串中找出连续最长的数字串，并把这个串的长度返回，并把这个最长数字串付给其中一个函数参数outputstr所指内存。例如："abcd12345ed125ss123456789"的首地址传给intputstr后，函数将返回
+9，outputstr所指的值为123456789
+int continumax(char *outputstr, char *inputstr)
+{
+char *in = inputstr, *out = outputstr, *temp, *final;
+int count = 0, maxlen = 0;
+
+while( *in != '\0' )
+{
+if( *in > 47 && *in < 58 )
+{
+for(temp = in; *in > 47 && *in < 58 ; in++ )
+count++;
+}
+else
+in++;
+
+if( maxlen < count )
+{
+maxlen = count;
+count = 0;
+final = temp;
+}
+}
+for(int i = 0; i < maxlen; i++)
+{
+*out = *final;
+out++;
+final++;
+}
+*out = '\0';
+return maxlen;
+}
+
+2.求组合数： 求n个数（1....n）中k个数的组合....
+           如：combination(5,3)
+  要求输出：543，542，541，532，531，521，432，431，421，321，
+#include<stdio.h>
+
+int pop(int *);
+int push(int );
+void combination(int ,int );
+
+int stack[3]={0};
+top=-1;
+
+int main()
+{
+int n,m;
+printf("Input two numbers:\n");
+while( (2!=scanf("%d%*c%d",&n,&m)) )
+{
+fflush(stdin);
+printf("Input error! Again:\n");
+}
+combination(n,m);
+printf("\n");
+}
+void combination(int m,int n)
+{
+int temp=m;
+push(temp);
+while(1)
+{
+if(1==temp)
+{
+if(pop(&temp)&&stack[0]==n) //当栈底元素弹出&&为可能取的最小值，循环退出
+break;
+}
+else if( push(--temp))
+{
+printf("%d%d%d  ",stack[0],stack[1],stack[2]);//§&auml;¨ì¤@?
+pop(&temp);
+}
+}
+}
+int push(int i)
+{
+stack[++top]=i;
+if(top<2)
+return 0;
+else
+return 1;
+}
+int pop(int *i)
+{
+*i=stack[top--];
+if(top>=0)
+return 0;
+else
+return 1;
+}
+
+
+2、有一分数序列：1/2,1/4,1/6,1/8……，用函数调用的方法，求此数列前20项的和
+#include <stdio.h>
+double getValue()
+{
+    double result = 0;
+    int i = 2;
+    while(i < 42)
+    {
+        result += 1.0 / i;//一定要使用1.0做除数，不能用1，否则结果将自动转化成整数，即0.000000
+        i += 2;
+    }
+    return result;
+}
+int main()
+{
+    printf("result is %f\n", getValue());
+    system("pause");
+    return 0;
+}
+
+
+1.有一个数组a[1000]存放0--1000;要求每隔二个数删掉一个数，到末尾时循环至开头继续进行，求最后一个被删掉的数的原始下标位置。
+以7个数为例：
+   {0,1,2,3,4,5,6,7} 0-->1-->2（删除）-->3-->4-->5(删除)-->6-->7-->0（删除），如此循环直到最后一个数被删除。
+方法1：数组
+#include <iostream>
+using namespace std;
+#define null 1000
+
+int main()
+{
+int arr[1000];
+for (int i=0;i<1000;++i)
+arr[i]=i;
+int j=0;
+int count=0;
+while(count<999)
+{
+while(arr[j%1000]==null)
+j=(++j)%1000;
+j=(++j)%1000;
+while(arr[j%1000]==null)
+j=(++j)%1000;
+j=(++j)%1000;
+while(arr[j%1000]==null)
+j=(++j)%1000;
+arr[j]=null;
+++count;
+}
+while(arr[j]==null)
+j=(++j)%1000;
+
+cout<<j<<endl;
+return 0;
+}方法2：链表
+#include<iostream>
+using namespace std;
+#define null 0
+struct node
+{
+int data;
+node* next;
+};
+int main()
+{
+node* head=new node;
+head->data=0;
+head->next=null;
+node* p=head;
+for(int i=1;i<1000;i++)
+{
+node* tmp=new node;
+tmp->data=i;
+tmp->next=null;
+head->next=tmp;
+head=head->next;
+}
+head->next=p;
+while(p!=p->next)
+{
+p->next->next=p->next->next->next;
+p=p->next->next;
+}
+cout<<p->data;
+return 0;
+}
+方法3：通用算法
+#include <stdio.h>
+#define MAXLINE 1000   //元素个数
+/*
+MAXLINE   元素个数
+a[]       元素数组
+R[]       指针场
+suffix    下标
+index     返回最后的下标序号
+values    返回最后的下标对应的值
+start     从第几个开始
+K         间隔
+*/
+int find_n(int a[],int R[],int K,int& index,int& values,int s=0) {
+   int suffix;
+   int front_node,current_node;
+   suffix=0;
+      if(s==0) {
+      current_node=0;
+      front_node=MAXLINE-1;
+      }
+      else {
+      current_node=s;
+      front_node=s-1;
+      }
+        while(R[front_node]!=front_node) {
+            printf("%d\n",a[current_node]);
+            R[front_node]=R[current_node];
+            if(K==1) {
+              current_node=R[front_node];
+              continue;
+            }
+            for(int i=0;i<K;i++){
+               front_node=R[front_node];
+            }
+            current_node=R[front_node];
+        }
+ index=front_node;
+ values=a[front_node];
+
+ return 0;
+}
+int main(void) {
+int a[MAXLINE],R[MAXLINE],suffix,index,values,start,i,K;
+suffix=index=values=start=0;
+K=2;
+
+for(i=0;i<MAXLINE;i++) {
+a[i]=i;
+R[i]=i+1;
+}
+R[i-1]=0;
+find_n(a,R,K,index,values,2);
+printf("the value is %d,%d\n",index,values);
+return 0;
+}
+有1,2,....一直到n的无序数组,求排序算法,并且要求时间复杂度为O(n),空间复杂度O(1),使用交换,而且一次只能交换两个数.（华为）
+#include<iostream.h>
+
+int main()
+{
+    int a[]  = {10,6,9,5,2,8,4,7,1,3};
+    int len = sizeof(a) / sizeof(int);
+    int temp;
+
+    for(int i = 0; i < len; )
+    {
+temp = a[a[i] - 1];
+a[a[i] - 1] = a[i];
+a[i] = temp;
+
+if ( a[i] == i + 1)
+  i++;
+    }
+    for (int j = 0; j < len; j++)
+      cout<<a[j]<<",";
+
+    return 0;
+}
+
+（慧通）
+1 写出程序把一个链表中的接点顺序倒排
+typedef struct linknode
+{
+int data;
+struct linknode *next;
+}node;
+//将一个链表逆置
+node *reverse(node *head)
+{
+node *p,*q,*r;
+p=head;
+q=p->next;
+while(q!=NULL)
+{
+r=q->next;
+q->next=p;
+p=q;
+q=r;
+}
+
+head->next=NULL;
+head=p;
+return head;
+}
+2 写出程序删除链表中的所有接点
+void del_all(node *head)
+{
+node *p;
+while(head!=NULL)
+{
+p=head->next;
+free(head);
+head=p;
+}
+cout<<"释放空间成功!"<<endl;
+}
+3两个字符串，s,t;把t字符串插入到s字符串中，s字符串有足够的空间存放t字符串
+void insert(char *s, char *t, int i)
+{
+char *q = t;
+char *p =s;
+if(q == NULL)return;
+while(*p!='\0')
+{
+p++;
+}
+while(*q!=0)
+{
+*p=*q;
+p++;
+q++;
+}
+*p = '\0';
+}
+
+
+2.写一个函数，功能：完成内存之间的拷贝
+memcpy source code:
+    270 void* memcpy( void *dst, const void *src, unsigned int len )
+    271 {
+    272    register char *d;
+    273    register char *s;
+    27
+    275    if (len == 0)
+    276       return dst;
+    277 
+    278    if (is_overlap(dst, src, len, len))
+    279       complain3("memcpy", dst, src, len);
+    280 
+    281    if ( dst > src ) {
+    282       d = (char *)dst + len - 1;
+    283       s = (char *)src + len - 1;
+    284       while ( len >= 4 ) {
+    285          *d-- = *s--;
+    286          *d-- = *s--;
+    287          *d-- = *s--;
+    288          *d-- = *s--;
+    289          len -= 4;
+    290       }
+    291       while ( len-- ) {
+    292          *d-- = *s--;
+    293       }
+    294    } else if ( dst < src ) {
+    295       d = (char *)dst;
+    296       s = (char *)src;
+    297       while ( len >= 4 ) {
+    298          *d++ = *s++;
+    299          *d++ = *s++;
+    300          *d++ = *s++;
+    301          *d++ = *s++;
+    302          len -= 4;
+    303       }
+    304       while ( len-- ) {
+    305          *d++ = *s++;
+    306       }
+    307    }
+    308    return dst;
+    309 }
+公司考试这种题目主要考你编写的代码是否考虑到各种情况，是否安全（不会溢出）
+各种情况包括：
+１、参数是指针，检查指针是否有效
+２、检查复制的源目标和目的地是否为同一个，若为同一个，则直接跳出
+３、读写权限检查
+４、安全检查，是否会溢出
+memcpy拷贝一块内存，内存的大小你告诉它
+strcpy是字符串拷贝，遇到'\0'结束
+
+/* memcpy ─── 拷贝不重叠的内存块 */  
+void memcpy(void* pvTo, void* pvFrom, size_t size)
+{
+void* pbTo = (byte*)pvTo;
+void* pbFrom = (byte*)pvFrom;
+ASSERT(pvTo != NULL && pvFrom != NULL); //检查输入指针的有效性
+ASSERT(pbTo>=pbFrom+size || pbFrom>=pbTo+size);//检查两个指针指向的内存是否重叠
+while(size-->0)
+*pbTo++ == *pbFrom++;
+return(pvTo);
+}
+
+2.华为面试题：怎么判断链表中是否有环？
+bool CircleInList(Link* pHead)
+{
+if(pHead = = NULL || pHead->next = = NULL)//无节点或只有一个节点并且无自环
+return (false);
+if(pHead->next = = pHead)//自环
+return (true);
+Link *pTemp1 = pHead;//step 1
+Link *pTemp = pHead->next;//step 2
+while(pTemp != pTemp1 && pTemp != NULL && pTemp->next != NULL)
+{
+pTemp1 = pTemp1->next;
+pTemp = pTemp->next->next;
+}
+if(pTemp = = pTemp1)
+return (true);
+return (false);
+}
+
+2.两个字符串，s,t;把t字符串插入到s字符串中，s字符串有足够的空间存放t字符串
+void insert(char *s, char *t, int i)
+{
+memcpy(&s[strlen(t)+i],&s[i],strlen(s)-i);
+memcpy(&s[i],t,strlen(t));
+s[strlen(s)+strlen(t)]='\0';
+}
+
+1。编写一个 C 函数，该函数在一个字符串中找到可能的最长的子字符串，且该字符串是由同一字符组成的。
+char * search(char *cpSource, char ch)
+{
+         char *cpTemp=NULL, *cpDest=NULL;
+         int iTemp, iCount=0;
+         while(*cpSource)
+         {
+                 if(*cpSource == ch)
+                 {
+                          iTemp = 0;
+                          cpTemp = cpSource;
+                          while(*cpSource == ch) 
+++iTemp, ++cpSource;
+                          if(iTemp > iCount) 
+iCount = iTemp, cpDest = cpTemp;
+        if(!*cpSource) 
+break;
+                 }
+                 ++cpSource;
+ }
+ return cpDest;
+}      
+2。请编写一个 C 函数，该函数在给定的内存区域搜索给定的字符，并返回该字符所在位置索引值。
+int search(char *cpSource, int n, char ch)
+{
+         int i;
+         for(i=0; i<n && *(cpSource+i) != ch; ++i);
+         return i;
+}
+
+3．一个单向链表，不知道头节点,一个指针指向其中的一个节点，问如何删除这个指针指向的节点？
+将这个指针指向的next节点值copy到本节点，将next指向next->next,并随后删除原next指向的节点。
+
+1、用指针的方法，将字符串“ABCD1234efgh”前后对调显示
+#include <stdio.h>
+#include <string.h>
+#include <dos.h>
+int main()
+{
+    char str[] = "ABCD1234efgh";
+    int length = strlen(str);
+    char * p1 = str;
+    char * p2 = str + length - 1;
+    while(p1 < p2)
+    {
+        char c = *p1;
+        *p1 = *p2;
+        *p2 = c;
+        ++p1;
+        --p2;
+    }
+    printf("str now is %s\n",str);
+    system("pause");
+    return 0;
+}
+
+2.第二个code题是实现strcmp
+int StrCmp(const char *str1, const char *str2)
+做是做对了，没有抄搞，比较乱
+int StrCmp(const char *str1, const char *str2)
+{
+    assert(str1 && srt2);
+    while (*str1 && *str2 && *str1 == *str2) {
+        str1++, str2++;
+    }
+    if (*str1 && *str2)
+        return (*str1-*str2);
+    elseif (*str1 && *str2==0)
+        return 1;
+    elseif (*str1 = = 0 && *str2)
+        return -1;
+    else
+        return 0;
+}
+
+int StrCmp(const char *str1, const char *str2)
+{
+         //省略判断空指针(自己保证)
+while(*str1 && *str1++ = = *str2++);
+return *str1-*str2; 
+}
+第三个code题是实现子串定位
+int FindSubStr(const char *MainStr, const char *SubStr)
+做是做对了，没有抄搞，比较乱
+int MyStrstr(const char* MainStr, const char* SubStr)
+{
+const char *p;
+const char *q;
+const char * u = MainStr;
+    
+//assert((MainStr!=NULL)&&( SubStr!=NULL));//用断言对输入进行判断
+while(*MainStr) //内部进行递增
+{
+p = MainStr;
+q = SubStr;
+while(*q && *p && *p++ == *q++);
+if(!*q )
+{
+return MainStr - u +1 ;//MainStr指向当前起始位，u指向
+}
+MainStr ++;
+}
+return -1;
+}
+
+
+华为全套完整试题
+高级题
+6、已知一个单向链表的头，请写出删除其某一个结点的算法，要求，先找到此结点，然后删除。
+slnodetype *Delete(slnodetype *Head,int key){}中if(Head->number==key)
+{
+Head=Pointer->next;
+free(Pointer);
+break;
+}
+Back = Pointer;
+        Pointer=Pointer->next;
+if(Pointer->number==key)
+{
+            Back->next=Pointer->next;
+free(Pointer);
+break;
+}
+void delete(Node* p)
+{
+    if(Head = Node)
+
+    while(p)
+}
+
+有一个16位的整数，每4位为一个数，写函数求他们的和。
+解释：
+整数1101010110110111
+和  1101+0101+1011+0111
+感觉应该不难，当时对题理解的不是很清楚，所以写了一个函数，也不知道对不对。
+疑问：
+    既然是16位的整数，1101010110110111是2进制的，那么函数参数怎么定义呢，请大虾指教。
+答案：用十进制做参数，计算时按二进制考虑。
+/* n就是16位的数，函数返回它的四个部分之和 */
+char SumOfQuaters(unsigned short n)
+{
+    char c = 0;
+    int i = 4;
+    do
+    {
+        c += n & 15;
+        n = n >> 4;
+    } while (--i);
+
+    return c;
+}
+
+
+2.写一函数，实现删除字符串str1中含有的字符串str2.
+第二个就是利用一个KMP匹配算法找到str2然后删除（用链表实现的话，便捷于数组）
+
+
+/*雅虎笔试题(字符串操作) 
+1.给定字符串A和B,输出A和B中的最大公共子串。
+比如A="aocdfe" B="pmcdfa" 则输出"cdf"
+*/
+//Author: azhen
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+char *commanstring(char shortstring[], char longstring[])
+{
+int i, j;
+
+char *substring=malloc(256);
+
+if(strstr(longstring, shortstring)!=NULL)              //如果……，那么返回shortstring
+return shortstring;  
+
+for(i=strlen(shortstring)-1;i>0; i--)                 //否则，开始循环计算
+{
+for(j=0; j<=strlen(shortstring)-i; j++){
+memcpy(substring, &shortstring[j], i);
+substring[i]='\0';
+if(strstr(longstring, substring)!=NULL)
+return substring;
+}
+}
+return NULL;
+}
+
+
+main()
+{
+char *str1=malloc(256);
+char *str2=malloc(256);
+char *comman=NULL;
+
+gets(str1);
+gets(str2);
+
+if(strlen(str1)>strlen(str2))                         //将短的字符串放前面
+comman=commanstring(str2, str1);
+else
+comman=commanstring(str1, str2);
+
+printf("the longest comman string is: %s\n", comman);
+}
+
+
+11.写一个函数比较两个字符串str1和str2的大小，若相等返回0，若str1大于
+str2返回1，若str1小于str2返回－1
+int strcmp ( const char * src,const char * dst)
+{
+        int ret = 0 ;
+        while( ! (ret = *(unsigned char *)src - *(unsigned char *)dst) && *dst)
+{
+                ++src;
+++dst;
+}
+        if ( ret < 0 )
+                ret = -1 ;
+        else if ( ret > 0 )
+                ret = 1 ;
+        return( ret );
+}
+
+3,求1000！的未尾有几个0（用素数相乘的方法来做，如72=2*2*2*3*3）;
+求出1->1000里,能被5整除的数的个数n1,能被25整除的数的个数n2,能被125整除的数的个数n3,
+能被625整除的数的个数n4.
+1000!末尾的零的个数=n1+n2+n3+n4;
+#include<stdio.h>
+#define NUM 1000
+
+int find5(int num){
+int ret=0;
+while(num%5==0){
+num/=5;
+ret++;
+}
+return ret;
+}
+int main(){
+int result=0;
+int i;
+for(i=5;i<=NUM;i+=5)
+{
+result+=find5(i);
+}
+printf(" the total zero number is %d\n",result);
+return 0;
+}
+
+
+1. 有双向循环链表结点定义为： 
+struct node 
+{ int data; 
+struct node *front,*next; 
+}; 
+有两个双向循环链表A，B，知道其头指针为：pHeadA,pHeadB，请写一函数将两链表中data值相同的结点删除 
+BOOL DeteleNode(Node *pHeader, DataType Value)
+{
+if (pHeader == NULL) return;
+
+BOOL bRet = FALSE;
+Node *pNode = pHead;
+while (pNode != NULL)
+{
+if (pNode->data == Value)
+{
+if (pNode->front == NULL)
+{
+pHeader = pNode->next;
+pHeader->front = NULL;
+}
+else
+{
+if (pNode->next != NULL)
+{
+pNode->next->front = pNode->front;
+}
+pNode->front->next = pNode->next;
+}
+
+Node *pNextNode = pNode->next;
+delete pNode;
+pNode = pNextNode;
+
+bRet = TRUE; 
+//不要break或return, 删除所有
+}
+else
+{
+pNode = pNode->next;
+}
+}
+
+return bRet;
+}
+
+void DE(Node *pHeadA, Node *pHeadB)
+{
+if (pHeadA == NULL || pHeadB == NULL)
+{
+return;
+}
+
+Node *pNode = pHeadA;
+while (pNode != NULL)
+{
+if (DeteleNode(pHeadB, pNode->data))
+{
+if (pNode->front == NULL)
+{
+pHeadA = pNode->next;
+pHeadA->front = NULL;
+}
+else
+{
+pNode->front->next = pNode->next;
+if (pNode->next != NULL)
+{
+pNode->next->front = pNode->front;
+}
+}
+Node *pNextNode = pNode->next;
+delete pNode;
+pNode = pNextNode;
+}
+else
+{
+pNode = pNode->next;
+}
+}
+}
+2. 编程实现：找出两个字符串中最大公共子字符串,如"abccade","dgcadde"的最大子串为"cad" 
+int GetCommon(char *s1, char *s2, char **r1, char **r2)
+{
+int len1 = strlen(s1);
+int len2 = strlen(s2);
+int maxlen = 0;
+
+for(int i = 0; i < len1; i++)
+{
+for(int j = 0; j < len2; j++)
+{
+if(s1[i] == s2[j])
+{
+int as = i, bs = j, count = 1;
+while(as + 1 < len1 && bs + 1 < len2 && s1[++as] == s2[++bs])
+count++;
+
+if(count > maxlen)
+{
+maxlen = count;
+*r1 = s1 + i;
+*r2 = s2 + j;
+}
+}
+}
+}
+3. 编程实现：把十进制数(long型)分别以二进制和十六进制形式输出，不能使用printf系列库函数
+char* test3(long num) {
+char* buffer = (char*)malloc(11);
+buffer[0] = '0';
+buffer[1] = 'x';
+buffer[10] = '\0';
+
+char* temp = buffer + 2;
+for (int i=0; i < 8; i++) {
+temp[i] = (char)(num<<4*i>>28);
+temp[i] = temp[i] >= 0 ? temp[i] : temp[i] + 16;
+temp[i] = temp[i] < 10 ? temp[i] + 48 : temp[i] + 55;
+}
+return buffer;
+}
+
+
+输入N, 打印 N*N 矩阵
+比如 N = 3，打印：
+
+1  2  3
+8  9  4
+7  6  5
+
+N = 4，打印：
+
+1   2   3   4
+12  13  14  5
+11  16  15  6
+10  9   8   7
+解答：
+1 #define N 15
+int s[N][N];
+void main()
+{
+int k = 0, i = 0, j = 0;
+int a = 1; 
+for( ; k < (N+1)/2; k++ )
+{
+while( j < N-k ) s[i][j++] = a++; i++; j--;
+while( i < N-k ) s[i++][j] = a++; i--; j--;
+while( j > k-1 ) s[i][j--] = a++; i--; j++;
+while( i > k )   s[i--][j] = a++; i++; j++; 
+}
+for( i = 0; i < N; i++ )
+{
+for( j = 0; j < N; j++ )
+cout << s[i][j] << '\t';
+cout << endl;
+}
+}
+2 define MAX_N  100
+int matrix[MAX_N][MAX_N];
+
+/*
+ *（x,y）：第一个元素的坐标
+ * start：第一个元素的值
+ * n：矩阵的大小
+ */
+void SetMatrix(int x, int y, int start, int n) {
+    int i, j;
+
+    if (n <= 0)    //递归结束条件
+        return;
+    if (n == 1) {  //矩阵大小为1时
+        matrix[x][y] = start;
+        return;
+    }
+    for (i = x; i < x + n-1; i++)   //矩阵上部
+        matrix[y][i] = start++;
+
+    for (j = y; j < y + n-1; j++)   //右部
+        matrix[j][x+n-1] = start++;
+
+    for (i = x+n-1; i > x; i--)     //底部
+        matrix[y+n-1][i] = start++;
+
+    for (j = y+n-1; j > y; j--)     //左部
+        matrix[j][x] = start++;
+
+    SetMatrix(x+1, y+1, start, n-2);   //递归
+}
+
+void main() {
+   int i, j;
+   int n;
+
+   scanf("%d", &n);
+   SetMatrix(0, 0, 1, n);
+   
+   //打印螺旋矩阵
+   for(i = 0; i < n; i++) {
+      for (j = 0; j < n; j++)
+printf("%4d", matrix[i][j]);
+      printf("\n");
+   }
+}
+
+
+斐波拉契数列递归实现的方法如下：
+ int  Funct( int n )
+{
+   if(n==0) return 1;
+   if(n==1) return 1;
+   retrurn  Funct(n-1) + Funct(n-2);
+}
+请问，如何不使用递归，来实现上述函数？
+请教各位高手！
+解答：int  Funct( int n )  //  n 为非负整数
+{
+   int a=0;
+   int b=1;
+   int c;
+   if(n==0) c=1;
+   else if(n==1) c=1;
+   else for(int i=2;i<=n;i++)  //应该n从2开始算起
+   {
+     c=a+b;
+     a=b;
+     b=c;
+   }
+   return c;
+}
+解答：
+现在大多数系统都是将低字位放在前面，而结构体中位域的申明一般是先声明高位。
+100  的二进制是 001 100 100
+低位在前   高位在后  
+001----s3
+100----s2
+100----s1
+所以结果应该是 1
+如果先申明的在低位则：
+001----s1
+100----s2
+100----s3
+结果是 4
+1、原题跟little-endian，big-endian没有关系
+2、原题跟位域的存储空间分配有关，到底是从低字节分配还是从高字节分配，从Dev C++和VC7.1上看，都是从低字节开始分配，并且连续分配，中间不空，不像谭的书那样会留空位
+3、原题跟编译器有关，编译器在未用堆栈空间的默认值分配上有所不同，Dev C++未用空间分配为
+01110111b，VC7.1下为11001100b,所以在Dev C++下的结果为5，在VC7.1下为1。
+
+注：PC一般采用little-endian，即高高低低，但在网络传输上，一般采用big-endian，即高低低高，华为是做网络的，所以可能考虑big-endian模式，这样输出结果可能为4
+
+判断一个字符串是不是回文
+int IsReverseStr(char *aStr)
+{
+int i,j;
+int found=1;
+if(aStr==NULL)
+return -1;
+j=strlen(aStr);
+for(i=0;i<j/2;i++)
+if(*(aStr+i)!=*(aStr+j-i-1))
+{
+found=0;
+break;
+}
+return found;
+}
+
+Josephu 问题为：设编号为1，2，… n的n个人围坐一圈，约定编号为k（1<=k<=n）的人从1开始报数，数到m 的那个人出列，它的下一位又从1开始报数，数到m的那个人又出列，依次类推，直到所有人出列为止，由此产生一个出队编号的序列。
+
+数组实现：
+#include <stdio.h>
+#include <malloc.h>
+int Josephu(int n, int m)
+{
+  int flag, i, j = 0;
+  int *arr = (int *)malloc(n * sizeof(int));
+  for (i = 0; i < n; ++i)
+    arr[i] = 1;
+  for (i = 1; i < n; ++i)
+  {
+    flag = 0;
+    while (flag < m)
+    {
+      if (j == n)
+        j = 0;
+      if (arr[j])
+        ++flag;
+      ++j;
+    }
+    arr[j - 1] = 0;
+    printf("第%4d个出局的人是：%4d号\n", i, j);
+  }
+  free(arr);
+  return j;
+}
+int main()
+{
+  int n, m;
+  scanf("%d%d", &n, &m);
+  printf("最后胜利的是%d号！\n", Josephu(n, m));
+  system("pause");
+  return 0;
+}
+链表实现：
+#include <stdio.h>
+#include <malloc.h>
+typedef struct Node
+{
+  int index;
+  struct Node *next;
+}JosephuNode;
+int Josephu(int n, int m)
+{
+  int i, j;
+  JosephuNode *head, *tail;
+  head = tail = (JosephuNode *)malloc(sizeof(JosephuNode));
+  for (i = 1; i < n; ++i)
+  {
+    tail->index = i;
+    tail->next = (JosephuNode *)malloc(sizeof(JosephuNode));
+    tail = tail->next;
+  }
+  tail->index = i;
+  tail->next = head;
+  
+  for (i = 1; tail != head; ++i)
+  {
+    for (j = 1; j < m; ++j)
+    {
+      tail = head;
+      head = head->next;
+    }
+    tail->next = head->next;
+    printf("第%4d个出局的人是：%4d号\n", i, head->index);
+    free(head);
+    head = tail->next;
+  }
+  i = head->index;
+  free(head);
+  return i;
+}
+int main()
+{
+  int n, m;
+  scanf("%d%d", &n, &m);
+  printf("最后胜利的是%d号！\n", Josephu(n, m));
+  system("pause");
+  return 0;
+}
+
+已知strcpy函数的原型是：
+        char * strcpy(char * strDest,const char * strSrc);
+    1.不调用库函数，实现strcpy函数。
+    2.解释为什么要返回char *。
+    解说：
+    1.strcpy的实现代码
+        char * strcpy(char * strDest,const char * strSrc)
+        {
+                if ((strDest==NULL)||(strSrc==NULL)) file://[/1]
+                        throw "Invalid argument(s)"; //[2]
+                char * strDestCopy=strDest;  file://[/3]
+                while ((*strDest++=*strSrc++)!='\0'); file://[/4]
+                return strDestCopy;
+        }
+    错误的做法：
+    [1]
+    (A)不检查指针的有效性，说明答题者不注重代码的健壮性。
+    (B)检查指针的有效性时使用((!strDest)||(!strSrc))或(!(strDest&&strSrc))，说明答题者对C语言中类型的隐式转换没有深刻认识。在本例中char *转换为bool即是类型隐式转换，这种功能虽然灵活，但更多的是导致出错概率增大和维护成本升高。所以C++专门增加了bool、true、false三个关键字以提供更安全的条件表达式。
+    (C)检查指针的有效性时使用((strDest==0)||(strSrc==0))，说明答题者不知道使用常量的好处。直接使用字面常量（如本例中的0）会减少程序的可维护性。0虽然简单，但程序中可能出现很多处对指针的检查，万一出现笔误，编译器不能发现，生成的程序内含逻辑错误，很难排除。而使用NULL代替0，如果出现拼写错误，编译器就会检查出来。
+    [2]
+    (A)return new string("Invalid argument(s)");，说明答题者根本不知道返回值的用途，并且他对内存泄漏也没有警惕心。从函数中返回函数体内分配的内存是十分危险的做法，他把释放内存的义务抛给不知情的调用者，绝大多数情况下，调用者不会释放内存，这导致内存泄漏。
+    (B)return 0;，说明答题者没有掌握异常机制。调用者有可能忘记检查返回值，调用者还可能无法检查返回值（见后面的链式表达式）。妄想让返回值肩负返回正确值和异常值的双重功能，其结果往往是两种功能都失效。应该以抛出异常来代替返回值，这样可以减轻调用者的负担、使错误不会被忽略、增强程序的可维护性。
+    [3]
+    (A)忘记保存原始的strDest值，说明答题者逻辑思维不严密。
+    [4]
+    (A)循环写成while (*strDest++=*strSrc++);，同[1](B)。
+    (B)循环写成while (*strSrc!='\0') *strDest++=*strSrc++;，说明答题者对边界条件的检查不力。循环体结束后，strDest字符串的末尾没有正确地加上'\0'。多谢楼主  辛苦了 
+
+正方形4个顶点；
+每边的中点,共4个；
+两条对角线的交点，1个。
+总共9个点。请用一笔将9个点连起来？
+
+
+
+12.直接链接两个信令点的一组链路称作什么? 　　
+PPP点到点连接 　　 　
+13.接入网用的是什么接口?
+V5接口　 　　
+14.voip都用了那些协议? 　
+H.323协议簇、SIP协议、Skype协议、H.248和MGCP协议　
+选择题: 　　
+21.Ethternet链接到Internet用到以下那个协议? D　　
+A.HDLC;B.ARP;C.UDP;D.TCP;E.ID 　 　
+22.属于网络层协议的是:( B C) 　 　　
+A.TCP;B.IP;C.ICMP;D.X.25 　
+23.Windows消息调度机制是:(C)　
+　 A.指令队列;B.指令堆栈;C.消息队列;D.消息堆栈; 
+　　
+
+问答题: 　　 
+29.IP Phone的原理是什么? 
+IP电话（又称IP PHONE或VoIP）是建立在IP技术上的分组化、数字化传输技术,其基本原理是：通过语音压缩算法对语音数据进行压缩编码处理,然后把这些语音数据按IP等相关协议进行打包,经过IP网络把数据包传输到接收地,再把这些语音数据包串起来,经过解码解压处理后,恢复成原来的语音信号,从而达到由IP网络传送语音的目的。
+30.TCP/IP通信建立的过程怎样，端口有什么作用？ 　　
+三次握手，确定是哪个应用程序使用该协议 　　 
+31.1号信令和7号信令有什么区别，我国某前广泛使用的是那一种？
+　1号信令接续慢，但是稳定，可靠。
+7号信令的特点是：信令速度快，具有提供大量信令的潜力，具有改变和增加信令的灵活性，便于开放新业务，在通话时可以随意处理信令，成本低。目前得到广泛应用。
+32.列举5种以上的电话新业务 
+如“闹钟服务”、“免干扰服务”、“热线服务”、“转移呼叫”、“遇忙回叫”、“缺席用户服务”、“追查恶意呼叫”、“三方通话”、“会议电话”、“呼出限制”、“来电显示”、“虚拟网电话”等
+
+12 程序设计
+1. 编写用C语言实现的求n阶阶乘问题的递归算法：
+答:long int fact(int n)
+{
+If(n==0||n==1)
+Return 1;
+Else
+Return n*fact(n-1);
+}
+2. 二分查找算法：
+1) 递归方法实现：
+int BSearch(elemtype a[],elemtype x,int low,int high)
+/*在下届为low，上界为high的数组a中折半查找数据元素x*/
+{
+int mid;
+if(low>high) return -1;
+mid=(low+high)/2;
+if(x==a[mid]) return mid;
+if(x<> 
+else return(BSearch(a,x,mid+1,high));
+}
+2) 非递归方法实现：
+int BSearch(elemtype a[],keytype key,int n)
+{
+int low,high,mid;
+low=0;high=n-1;
+while(low<=high) 
+{
+mid=(low+high)/2;
+if(a[mid].key==key) return mid;
+else if(a[mid].key 
+else high=mid-1;
+}
+return -1;
+}
+3. 递归计算如下递归函数的值（斐波拉契）：
+f(1)=1
+f(2)=1
+f(n)=f(n-1)+f(n-2) n>2
+解：非递归算法:
+int f(int n)
+{
+int i,s,s1,s2;
+s1=1;/*s1用于保存f(n-1)的值*/
+s2=1;/*s2用于保存f(n-2)的值*/
+s=1;
+for(i=3;i<=n;i++)
+{
+s=s1+s2;
+s2=s1;
+s1=s;
+}
+return(s);
+}
+递归算法:
+Int f(int n)
+{
+If(n==1||n==2)
+Rerurn 1;
+Else
+Rerutn f(n-1)+f(n-2);
+}
+4. 交换两个数，不用第三块儿内存：
+答:int a = ……;
+int b = ……;
+a = a + b;
+b = a - b;
+a = a - b;
+5. 冒泡排序：
+答:void BubbleSort(elemtype x[],int n) //时间复杂度为0(n*n);
+{
+int i,j;
+elemtype temp;
+for(i=1;i<> 
+for(j=0;j<> 
+{
+if(x[j].key>x[j+1].key) 
+{
+temp=x[j];
+x[j]=x[j+1];
+x[j+1]=temp;
+}
+}
+}
+//补充一个改进的冒泡算法:
+void BubbleSort(elemtype x[],int n)
+{
+Int i,j;
+BOOL exchange; //记录交换标志
+for(i=1;i<> 
+{
+Exchange = false;
+For(j=n-1;j>=i;–j)
+{
+If(x[j]>x[j+1])
+{
+x[0] = x[j];
+X[j] = x[j+1];
+X[j+1] = x[0];
+Exchange = true; //发生了交换,设置标志为真.
+}
+}
+if (!Exchange ) //为发生替换,提前终止算法
+return;
+}
+}
+6. c语言 文件读写
+#include “stdio.h”
+main()
+{
+FILE *fp;
+char ch,filename[10];
+scanf(“%s”,filename);
+if((fp=fopen(filename,”w”)==NULL)
+{
+printf(“cann’t open filen”);
+exit(0);
+}
+ch=getchar();
+while(ch!=’#')
+{
+fputc(ch,fp);
+putchar(ch);
+ch=getchar();
+}
+fclose(fp);
+}
+7. winsocket编程 //这个不错
+// 服务器代码
+#include 
+#include 
+void main()
+{
+WORD wVersionRequested; //版本号
+WSADATA wsaData; //数据
+int err; 
+wVersionRequested = MAKEWORD(1,1);
+err = WSAStartup(wVersionRequested,&wsaData);
+if( err != 0)
+{
+return; 
+}
+if(LOBYTE( wsaData.wVersion ) != 1||
+HIBYTE( wsaData.wVersion) != 1)
+{
+WSACleanup();
+return;
+}
+SOCKET sockSrv=socket(AF_INET,SOCK_STREAM,0); //建立套接字
+SOCKADDR_IN addrSrv; 
+addrSrv.sin_addr.S_un.S_addr=htonl(INADDR_ANY);
+addrSrv.sin_family=AF_INET;
+addrSrv.sin_port=htons(6000);
+bind(sockSrv,(SOCKADDR*)&addrSrv,sizeof(SOCKADDR)); //绑定端口
+listen(sockSrv,5); //转换socket套接子为侦听套接子
+SOCKADDR_IN addrClient;
+int len=sizeof(SOCKADDR);
+while(1) //无限循环
+{
+SOCKET sockConn=accept(sockSrv,(SOCKADDR*)&addrClient,&len);
+char sendBuf[100];
+sprint(sendBuf,”Welcome %s to [url]http://www.sunxin.org/[/url]“,
+inet_ntoa(addrClient.sin_addr));
+send(sockConn,sendBuf,strlen(sendBuf)+1,0);
+char recvBuf[100];
+recv(sockConn,recvBuf);
+printf(“%sn”,recvBuf);
+closesocket(sockConn);
+WSACleanup();
+} 
+}
+注：这是Server端；File->New->Win32 Console Application，工程名：TcpSrv；然后，File->New->C++ Source File，文件名：TcpSrv；在该工程的Setting的Link的Object/library modules项要加入ws2_32.lib
+#include 
+#include 
+void main()
+{
+WORD wVersionRequested;
+WSADATA wsaData;
+int err; 
+wVersionRequested = MAKEWORD(1,1);
+err = WSAStartup(wVersionRequested,&wsaData); //启动winsock Dll
+if( err != 0)
+{
+return; 
+}
+if(LOBYTE( wsaData.wVersion ) != 1||
+HIBYTE( wsaData.wVersion) != 1)
+{
+WSACleanup();
+return;
+}
+SOCKET sockClient=socket(AF_INET,SOCK_STREAM,0);
+SOCKADDR_IN addrSrv;
+addrSrv.sin_addr.S_un.S_addr=inet_addr(“127.0.0.1″); 
+addrSrv.sin_family=AF_INET;
+addrSrv.sin_port = htons(6000);
+connect(sockClient,(SOCKADDR*)&addrSrv,sizeof(SOCKADDR));
+char recvBuf[100];
+recv(sockClient,recvBuf,100,0);
+printf(“%sn”,recvBuf);
+send(sockClient,”This is zhangsan”,strlen(“This is zhangsan”)+1,0); 
+closesocket(sockClient);
+WSACleanup();
+}
+注：这是Client端；File->New->Win32 Console Application，工程名：TcpClient；然后，File->New->C++ Source File，文件名：TcpClient；同理，在该工程的Setting的Link的Object/library modules项要加入ws2_32.lib
+8. 类的知识 (非常不错的一道题目)..
+C＋＋
+#include 
+class human
+{
+public:
+human(){ human_num++;}; //默认构造函数
+static int human_num; //静态成员
+~human()
+{
+human_num–;
+print();
+}
+void print() //
+{
+cout<<"human num is: "<<HUMAN_NUM<<ENDL;< p> 
+}
+protected:
+private:
+};
+int human::human_num = 0; //类中静态数据成员在外部定义,仅定义一次
+human f1(human x)
+{
+x.print();
+return x;
+}
+int main(int argc, char* argv[])
+{
+human h1; //调用默认构造函数,human_num变为1
+h1.print(); // 打印Human_man:1
+human h2 = f1(h1); //先调用函数f1(),输出human_num:1,而后输出human_num为0,
+h2.print();//打印输出:human_num:0
+return 0;
+} //依次调用两个析构函数:输出:human_num:-1,human_num:-2;
+输出：
+1
+1
+0
+0
+－1
+－2
+－－－－－－－－－－－－－－－－－－－－－－－－－－－－
+分析：
+human h1; //调用构造函数,---hum_num = 1;
+h1.print(); //输出:"human is 1"
+human h2 = f1(h1); //再调用f1(h1)的过程中,由于函数参数是按值传递对象,调用默认的复制构造函数,h2并没有调用定义的构造函数.
+
+4、SQL问答题
+SELECT * FROM TABLE
+和
+SELECT * FROM TABLE
+WHERE NAME LIKE '%%' AND ADDR LIKE '%%'
+AND (1_ADDR LIKE '%%' OR 2_ADDR LIKE '%%'
+OR 3_ADDR LIKE '%%' OR 4_ADDR LIKE '%%' )
+的检索结果为何不同？
+答: 前者检索全部，后者有三种情况检索不出：NAME＝null或ADDR=null或1_ADDR LIKE 2_ADDR 3_ADDR 4_ADDR其一为null.
+前者检索所有记录，后者只能检索出 NAME 和ADDR中非Null的记录。
+5、SQL问答题
+表结构：
+1、 表名：g_cardapply
+字段(字段名/类型/长度)：
+g_applyno varchar 8；//申请单号（关键字）
+g_applydate bigint 8；//申请日期
+g_state varchar 2；//申请状态
+2、 表名：g_cardapplydetail
+字段(字段名/类型/长度)：
+g_applyno varchar 8；//申请单号（关键字）
+g_name varchar 30；//申请人姓名
+g_idcard varchar 18；//申请人身份证号
+g_state varchar 2；//申请状态
+其中，两个表的关联字段为申请单号。
+题目：
+1、 查询身份证号码为440401430103082的申请日期
+select A.g_applydate
+from g_cardapply A inner join g_cardapplydetail B on A.g_applyno = B.g_applyno
+where B.g_idCard = '440401430103082'
+2、 查询同一个身份证号码有两条以上记录的身份证号码及记录个数
+select g_idCard,count(*) as Cnt from g_cardapplydetail
+group by g_idcard
+having count(*) > 1
+3、 将身份证号码为440401430103082的记录在两个表中的申请状态均改为07
+update g_cardapplydetail set g_state = ’07′
+where g_idcard = ’440401430103082′
+update A set g_state = ’07′
+from g_cardapply A inner join g_cardapplydetail B on A.g_applyno = B.g_applyno
+where B.g_idcard = ’440401430103082′
+4、 删除g_cardapplydetail表中所有姓李的记录
+delete from g_cardapplydetail
+where g_name like ‘李%’
+3、 将身份证号码为440401430103082的记录在两个表中的申请状态均改为07
+update g_cardapplydetail set g_state = ’07′
+where g_idcard = ’440401430103082′
+update A set g_state = ’07′
+from g_cardapply A inner join g_cardapplydetail B on A.g_applyno = B.g_applyno
+where B.g_idcard = ’440401430103082′
+5、SQL问答题:
+/*Select g_cardapply. g_applydate
+From g_cardapply, g_cardapplydetail
+Where g_cardapply. g_applyno=g_cardapplydetail. g_applyno
+And g_cardapplydetail.g_idcard=’440401430103082′*/
+/*Select *From (select count(*) g_count , g_idcard
+From g_cardapplydetail
+Group by g_idcard ) a
+Where a. g_count >= 2*/
+/*Update g_cardapply
+set g_state=’07′
+where g_applyno in (select distinct g_applyno
+from g_cardapplydetail
+where g_idcard =’440401430103082′)
+update g_cardapplydetail
+set g_state=’07′
+where g_idcard=’440401430103082′ */
+/*Delete from g_cardapplydetail
+Where g_name like ‘李%’*/
+通过测试
+PS:偶GF做的，自己先汗一下
+
+4. In C++, there’re four type of Casting Operators, please enumerate and explain them especially the difference.
+解析： C++类型转换问题
+答案： reinterpret_cast,static_cast,const_cast,dynamic_cast
+static_cast 数制转换
+dynamic_cast 用于执行向下转换和在继承之间的转换
+const_cast 去掉const
+reinterpret_cast 用于执行并不安全的orimplmentation_dependent类型转换
+
+7 以下代码有什么问题，如何修改？
+#include 
+#include 
+using namespace std;
+void print(vector);
+int main()
+{
+vector array;
+array.push_back(1);
+array.push_back(6);
+array.push_back(6);
+array.push_back(3);
+//删除array数组中所有的6
+vector::iterator itor;
+vector::iterator itor2;
+itor=array.begin();
+for(itor=array.begin(); itor!=array.end(); )
+{
+if(6==*itor)
+{
+itor2=itor;
+array.erase(itor2);
+}
+itor++;
+}
+print(array);
+return 0;
+}
+void print(vector v)
+{
+cout << "n vector size is: " << v.size() << endl;
+vector::iterator p = v.begin();
+}
+我的答案是，迭代器问题，只能删除第一个6，以后迭代器就失效了，不能删除之后的元素。
+但我不知道怎么改
+void print(const vector&);
+int main()
+{
+vector array;
+array.push_back(1);
+array.push_back(6);
+array.push_back(6);
+array.push_back(3);
+//删除array数组中所有的6
+array.erase( remove( array.begin(), array.end(), 6 ) , array.end() );
+print(array);
+return 0;
+}
+void print(const vector& v)
+{
+cout << "n vector size is: " << v.size() << endl;
+copy(v.begin(), v.end(), ostream_iterator(cout, ” “) );
+} 
+#include 
+#include 
+using namespace std;
+int main()
+{
+vector array;
+array.push_back(1);
+array.push_back(6);
+array.push_back(6);
+array.push_back(6);
+array.push_back(6);
+array.push_back(6);
+array.push_back(3);
+array.push_back(9);
+array.push_back(8);
+array.push_back(5);
+//É¾³ýarrayÊý×éÖÐËùÓÐµÄ6
+vector::iterator itor;
+itor=array.begin();
+for(itor=array.begin(); itor!=array.end();++itor )
+{
+if(6==*itor)
+{
+itor=array.erase(itor);
+–itor;
+}
+}
+cout << "vector size is: " << array.size() << endl;
+for(itor=array.begin(); itor!=array.end();++itor )
+{
+cout<<*itor<<" ";
+}
+system("pause");
+return 0;
+}
+答案: 执行itor=array.erase(itor);这句话后，itor不会移动，而只是把删除的数后面的数都往前移一位，所以删除了第一个6后，指针指向第2个6，然后在来个itor++，指针就指向array.end()了，给你画个草图：
+1 6 6 3 array.end() //最开始指针itor指向第一个6；
+1 6 3 array.end() //删除第一个6后，指向第二个6
+1 6 3 array.end() //itor++后，就指向3了，所以不能删除
+
+一、单项选择题：（共12题，每题2分，共24分）
+1. 下面哪一个不是C++的标准数据类型？ （ D）
+A. int B. char
+C. bool D. real
+2. break关键字在哪一种语法结构中不能使用？ （C）
+A. for语句 B. switch语句
+C. if语句 D. while语句
+3. 类的继承方式有几种？ （B ）
+A. 两种 B. 三种
+C. 四种 D. 六种
+4. extern关键字的作用是什么？ （D）
+A. 声明外部链接 B. 声明外部头文件引用
+C. 声明使用扩展C++语句 D. 声明外部成员函数、成员数据。
+5. C库函数strstr的功能是？ （A ）
+A. 查找子串 B. 计算字符串长度
+C. 字符串比较 D. 连结字符串
+6. stl::deque是一种什么数据类型？ （A ）
+A. 动态数组 B. 链表
+C. 堆栈 D. 树
+7. STL库里含有下面的哪一种泛型算法？ （D ）
+A. KMP查找 B. 折半查找
+C. 冒泡排序 D. 快速排序
+8. 现在最快且最通用的排序算法是什么？ （A ）
+A. 快速排序 B. 冒泡排序
+C. 选择排序 D. 外部排序
+9. Win32下的线程的哪一种优先级最高？ （ C）
+A. THREAD_PRIORITY_HIGHEST 高优先级
+B. THREAD_PRIORITY_IDLE 最低优先级,仅在系统空闲时执行
+C. THREAD_PRIORITY_TIME_CRITICAL 最高优先级
+D. THREAD_PRIORITY_ABOVE_NORMAL 高于普通优先级
+10. 下面四个选项中，哪一个不是WinMain函数的参数？ （D ）
+A. HINSTANCE B. INT
+C. LPSTR D. WPARAM
+11. VC++的编译器中，运算符new底层的实现是什么？ （B ）
+A. VirtualAlloc() B. HeapAlloc()
+C. GlobalAlloc() D. AllocateUserPhysicalPages()
+12. 下面哪一本C++参考书最厚？ （ C）
+A. 《Think in C++》 B. 《深入浅出MFC》
+C. 《C++ Primer》 D. 《Effective C++》 
+13. 当调用Windows API函数InvalidateRect,将会产生什么消息（A）
+A. WM_PAINT B. WM_CREATE
+C. WM_NCHITTEST D. WM_SETFOCUS 
+14. 关于virtual void Draw()=0，下面说法正确的有几个（C）
+(1)它是纯虚函数(对)
+(2)它在定义它的类中不能实现(对)
+(3)定义它的类不可实例化(对)
+(4)如果一个类要继承一个ADT类，必须要实现其中的所有纯虚函数(错)//可以不实现,派生之后的类仍旧作为一个抽象类.
+A. 1 B. 2
+C. 3 D. 4
+二、不定项选择题：（共6题，每题3分，共18分，多选、错选、漏选均不给分）
+1. vector::iterator重载了下面哪些运算符？ （ACD）
+A. ++ B. >>
+C. *（前置） D. ==
+2. CreateFile( )的功能有哪几个？ （AB ）
+A. 打开文件 B. 创建新文件
+C. 文件改名 D. 删除文件
+3. 下面哪些是句柄（HANDLE）？ （ABCD ）
+A. HINSTANCE 实例句柄B. HWND 窗口句柄
+C. HDC 设备描述符号句柄 D. HFONT 字体句柄
+4. 下面哪些不是OpenGL标准几何元素的绘制模式？ （A ）
+A. GL_FOG B. GL_LINE_STRIP
+C. GL_POINTS D. GL_TRIANGLE_FAN
+5. 下面哪些运算符不能被重载？ （ABD ）
+A. 做用域运算符“::” B. 对象成员运算符“.”
+C. 指针成员运算符“->” D. 三目运算符“? :”
+6. 下面哪些人曾参与了世界上第一个C++编译器的开发？ （ ）
+A. Bill Gates B. Stanley Lippman
+C. Anderson Hejlsberg D. Bjarne Stroustrup
+7. 以下说法正确的是？ （ ABC）
+A. 头文件中的 ifndef/define/endif 是为了防止该头文件被重复引用。
+B. 对于#include ，编译器从标准库路径开始搜索 filename.h
+对于#include “filename.h” ，编译器从用户的工作路径开始搜索 filename.h
+C. C++语言支持函数重载，C语言不支持函数重载。函数被C++编译后在库中的名字与C 语言的不同。假设某个函数的原型为： void foo(int x, int y); 该函数被C编译器编译后在库 中的名字为_foo，而C++编译器则会产生像_foo_int_int之类的名字。C++提供了C连接交换指定符号extern“C”来解决名字匹配问题。
+D. fopen函数只是把文件目录信息调入内存。//错,fopen是把整个文件读入内存
+
+三、判断题：（共12题，每题2分，共24分）
+1. 一个类必须要有一个不带参数的构造函数。 错
+2. 你不能写一个虚的构造函数。 对
+3. 类里面所有的函数都是纯虚函数时才是纯虚类。 错
+4. const成员函数对于任何本类的数据成员都不能进行写操作。 对
+5. 函数中带默认值的参数必须位于不带默认值的参数之后。 对
+6. char *p = "Test"; p[0] = 'R'; 错
+7. cout << "Test"; 对
+8. stl::list不支持随机访问叠代器。 对
+9. stl::vector的效率比stl::list高。 错
+10. VC和VC++是一回事，而VC++是一种比C++更难一些的语言。 错
+11. 理论上，new和malloc造成的内存泄露都会由操作系统回收。 错
+12. 在C++中struct和class的差别很大，所以从语法上不能混用。对
+四、简述题(共3题，每题5分，共15分)
+1. 请简述PeekMessage和GetMessage的区别。
+答: Peekmessage和Getmessage都是向系统的消息队列中取得消息，两个函数的不同在于取不到消息的时候,若Getmessage（）向消息队列中取不到消息，则程序的主线程会被OS（操作系统）挂起,等到有合适的消息时才返回;若是用Peekmessage（）在消息队列中取不到消息,则程序会取得OS控制权，运行一段时间。
+另外,在处理消息的时候,GetMessag()会将消息从队列中删除,而PeekMessage()可以设置最后一个参数wRemoveMsg来决定是否将消息保留在队列中。
+2. 请列出你所知道的在Windows SDK平台上，实现计时功能的方法。
+答:可以使用SetTimer函数创建一个计时器,SetTimer的函数原型如下：
+UINT_PTR SetTimer( HWND hWnd, UINT_PTR nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc
+3. 请简述你所知道的const的各种用法。
+答: const 常量
+const 修饰类的数据成员
+const 修饰指针
+const 应用在函数声明中
+const 应用在类成员函数
+
+五、编程题：（共3题，第1小题7分，第2小题14分，第3小题24分）
+1. 深度遍历二叉树。
+struct Node
+{
+Node *Parent;
+Node *Left, *Right;
+};
+void Through(Node *Root)
+{
+}
+2. 二分法查找。
+int DicFind( int *Array, int Count, int Value )
+{
+}
+3. 写出字符串类String的默认构造函数、析构函数和重载赋值运算符。
+已知类String的原型为：
+class String
+{
+public:
+String( const char *pStr = NULL ); // 默认构造函数
+~String( void ); // 析构函数
+String &operate = ( const String &Source ); // 重载赋值运算符
+private:
+char *m_pData; // 指向字符串的指针
+};
+今天下午的两道面试题
+1。 一人岁数的3次方是四位数，四次方是六位数，并知道此人岁数的3次方和4次方用遍了0～9十个数字。编写一程序求此人的岁数。
+2。对1，2，3， 4， 5 这五个数任意取出两个数，列出他们的所有组合。
+public static int getAge() {
+int age;
+int third;
+int fourth;
+for (int i = 11; true; i++) {
+if (i < 200) {
+third = (int) Math.pow(i, 3);
+fourth = (int) Math.pow(i, 4);
+if (getLength(third, fourth) == 10) {
+age = i;
+break;
+}
+}
+}
+return age;
+}
+public static int getLength(int args1, int args2) {
+String str1 = String.valueOf(args1);
+String str2 = String.valueOf(args2);
+String str = str1 + str2;
+if (str.length() != 10) {
+return -1;
+}
+int[] intarray = new int[10];
+for (int i = 0; i < str.length(); i++) {
+intarray[i] = Integer.parseInt(str.substring(i,i+1));
+}
+Arrays.sort(intarray);
+if(intarray[0]!=0 && intarray[9]!=9)
+return -1;
+return 10;
+}
+第二题还更简单了
+for(int i=1; i<6; i++){
+for(int j=1; j<6; j++){
+if(i==j){
+System.out.println(j+""+j);
+}else{
+System.out.println(i+""+j);
+System.out.println(j+""+i);
+}
+}
+}
+public class A {
+// [url]http://community.csdn.net/Expert/topic/4667/4667929.xml?temp=.57922[/url]
+public static void main(String[] args) {
+String t;
+String[] s = new String[5];
+int j = s.length;
+for(int i=0; i
+s[i] = new Integer(i+1).toString();
+}
+for(int i=0; i
+t = s[i];
+for(int a=0; a
+t += s[i];
+System.out.println(t);
+}
+System.out.println();
+}
+}
+}
+第二题还更简单了
+for(int i=1; i<6; i++){
+for(int j=1; j<6; j++){
+if(i==j){
+System.out.println(j+""+j);
+}else{
+System.out.println(i+""+j);
+System.out.println(j+""+i);
+}
+}
+}
+============================================================
+楼上的没看清题目，它是让你对1，2，3， 4， 5 这五个数任意取出两个数，列出他们的所有组合，所以重复的数字不应该算在里面。
+第二题应该改为：
+for(int i=1; i<6; i++){
+for(int j=1; j<6; j++){
+if(i==j){
+break;
+}else{
+System.out.println(i+""+j);
+System.out.println(j+""+i);
+}
+}
+}
+public class B {
+public static void main(String[] args) {
+for (int i = 1; i < 6; i++) {
+int t = i;
+for(int a = 0; a<5; a++) {
+int c = a+1;
+if(c == t) {
+continue;
+}else {
+System.out.println(t*10+c);
+}
+}
+System.out.println();
+}
+}
+}
+第二题
+public class Test
+{
+public static void main(String[] args)
+{
+int[][] a=new int[5][];
+for(int i=0;i<A.LENGTH;I++)
+{
+a[i]=new int[i+1];
+}
+for(int i=1;i<=a.length;i++)
+{
+for(int j=i+1;j<=a.length;j++)
+{
+System.out.print(i);
+System.out.print(j+" ");
+}
+System.out.print(" ");
+}
+for(int i=a.length;i>0;i–)
+{
+for(int j=i-1;j>0;j–)
+{
+System.out.print(i);
+System.out.print(j+” “);
+}
+System.out.print(” “);
+}
+}
+} 
+public class Test {
+public static int getDigits(String str) {
+int[] intarr = new int[10];
+for (int i = 0; i < 10; i++)
+intarr[i] = 0;
+for (int i = 0; i < str.length(); i++) {
+int j = Integer.parseInt(str.substring(i, i + 1));
+intarr[j] = 1;
+}
+int num = 0;
+for (int i = 0; i < 10; i++)
+num = num + intarr[i];
+return num;
+}
+private static int getAge() {
+int age;
+int third;
+int fourth;
+for (age = 1; age < 100; age++) {
+third = (int) Math.pow(age, 3);
+fourth = (int) Math.pow(age, 4);
+if (third < 1000 || third >= 10000)
+continue;
+if (fourth < 100000 || fourth >= 1000000)
+continue;
+String str = String.valueOf(third) + String.valueOf(fourth);
+if (getDigits(str) == 10)
+return age;
+}
+return 0;
+}
+} 
+第二道题
+class Combine
+{
+public static void main(String[] args)
+{
+for(int i=1; i<5; i++)
+{
+for(int j=i+1; j<6; j++)
+{
+System.out.println(i+""+j);
+System.out.println(j+""+i);
+}
+}
+}
+public class Age
+{
+public static void main(String [] args)
+{
+String str1 = null;
+String str2 = null;
+String str3 = null;
+String str4 = "0123456789";
+for(int i=10;i<50;i++)
+{
+str1 = Integer.toString(i*i*i);
+str2 = Integer.toString(i*i*i*i);
+str3 = str1+str2;
+if((str1.length() == 4) && (str2.length() ==6))
+{
+boolean flag = true;
+for(int j=0;j<10;j++)
+if(str3.indexOf(str4.charAt(j))==-1)
+flag = false;
+if(flag){
+System.out.println(">>>”+i);
+System.out.println(str3);
+}
+}
+}
+}
+}
+比赛贴~微软又一道笔试题
+silver6 | 04 四月, 2006 09:48
+怎样只用4行代码编写出一个从字符串到长整形的转换函数？
+我的方法，不过好象比4行多 *_#!~
+long atol(char *str)
+{
+char c = *str;
+if( !isdigit(c) ) str++;
+for(long value = 0; *str != ”; value = value * 10 + (*str -’0′),str++);
+return c == ‘-’ ? -value : value ;
+}
+void stol(const char * des, long& num)
+{
+for (int base = 1, i = 0; des[i] != ”; base = 10, ++i)
+{
+num *= base;
+num += (int)(des[i] – ’0′);
+}
+}
+num 要初始化为0
+void stol(const char * des, long& num)
+{
+for (int i=num=0; des[i] != ”; i++)
+{
+num *= 10;
+num += (int)(des[i] – ’0′);
+}
+} 
+void stol(char *str, long &num)
+{
+while(*str != ”)
+{
+num = num * 10 + (*str – ’0′);
+str++;
+}
+}
+void stol(const char * des, long& num)
+{
+char p = des[0];
+for (int b = 1, pos = 1, base = 1; des[pos] != ”; b = 10, ++pos, base *= 10)
+{
+(num *= b) += (int)(des[pos] – ’0′);
+}
+p == ‘-’ ? (num *= -1) : (num = (int)(des[0] – ’0′) * base + num);
+}
+改了一下
+真的是微软的笔试题么？
+我只用了一行。
+#include 
+using namespace std;
+long str2long(char* p,long xxx=0L)
+{
+return *p==”?xxx:str2long(p,xxx*10+(*p+++0-’0′));
+}
+int main()
+{
+char *str=”123456789″,*p=str;
+cout<<STR2LONG(P);
+getchar();
+return 0;
+}
+用STL，四行
+#include 
+#include 
+#include 
+using namespace std;
+long ToLong(string& s)
+{
+long l;
+istringstream iss(s);
+iss>>l;
+return l;
+}
+int main(int argc, _TCHAR* argv[])
+{
+string s = “-12356″;
+cout<<TOLONG(S);
+return 0;
+}
+谢谢刚才上面的帖子提醒负数的问题，我更正了，还是只用一行：
+#include 
+using namespace std;
+long str2long(char* p,long xxx=0L,bool IsPositive=true)
+{
+return *p==”?(IsPositive?xxx:xxx*(-1)):(*p==’-'?str2long(++p,0L,false):str2long(p,xxx*10+*p+++0-’0′,IsPositive));
+}
+int main()
+{
+char *str=”-123456789″,*p=str;
+cout<<STR2LONG(P);
+getchar();
+return 0;
+}
+
+
+
+1、编写算法判断二叉树是否是完全二叉树。
+分析：完全二叉树是指在一棵二叉树中除最后一层外，其余层都是满的，并且最后一层或者是满的，或者在右边缺少连续若干结点。要判定一棵二叉树是否完全二叉树，应先建立一棵二叉树，此例采用链式存储结构的先序算法建立一棵二叉树。判定一棵二叉树是否是完全二叉树，可以使用队列，在层次遍历的过程中利用完全二叉树“若某结点无左孩子，就一定没有右孩子”的原则进行判断。
+答案：
+#include <stdio.h>
+typedef char ElementType;
+typedef struct node
+{  
+ElementType data;
+   struct node *LChild,*RChild;
+}BinNode, *BinTree;
+void CreateBinTree(BinTree *root)
+{
+char ch;
+ ch=getchar();
+ if (ch==’#’)
+   *root=NULL;
+ else
+   {
+    *root=(BinTree)malloc(sizeof(BinNode));
+    (*root)->data=ch;
+    CreateBinTree(&((*root)->LChild));
+    CreateBinTree(&((*root)->RChild));
+   }
+}
+int JudgeComplete(BinTree bt)  /* 判断二叉树是否是完全二叉树，是返回1，不是返回0 */
+{
+   int tag=0,front,rear;
+   BinTree p=bt,Q[50];        	/* Q是队列，元素是二叉树结点指针，容量足够大 */
+   if(p==NULL) return 1;
+   front=rear=0;
+   Q[++rear]=p;                /* 初始化队伍，根结点指针入队 */
+   while(front!=rear)
+   {p=Q[++front];
+      if(p->LChild&&!tag)
+          Q[++rear]=p->LChild;	/* 左孩子入队 */
+      else if(p->LChild) return 0;   /* 前边已有结点为空，本结点不空 */
+      else tag=1;             	/* 首次出现结构为空 */
+      if(p->RChild&&!tag)
+          Q[++rear]=p->RChild;	/* 右孩子入队 */
+      else if(p->RChild) return 0;
+      else tag=1;
+   }
+return 1;
+}
+main()
+{
+int y;
+BinTree bt;
+printf("请输入结点数据："); 
+CreateBinTree(&bt);
+y=JudgeComplete(bt);
+if(y==1)
+    printf("该二叉树是完全二叉树\n");
+ else
+    printf("该二叉树不是完全二叉树\n");
+}
+
+2、设计一个用链表表示的直接插入排序算法。
+typedef struct node
+{
+int key;
+struct node  *next;
+}NODE;
+
+sort(NODE *h)
+{
+NODE *p,*h1,*t,*q;
+h1=h->next->next;
+h->next->next=null;
+while(h1!=null)
+{
+t=h1; h1=h1->next;
+q=h;p=h->next;
+while(p->num>t->num&&p!=null)  
+{q=p;p=p->next;}
+        t->next=p;q->next=t;
+}
+}
+
+4、库函数实现 (重点)
+b．已知memcpy的函数原型：void *memcpy(void *dest, void *src, unsigned int count);其中dest 是目的地址，src 是源地址，count是拷贝内存长度。(重点)
+  void* memcpy( void *dst, const void *src, unsigned int len )
+     {
+        register char *d;
+        register char *s;
+    
+        if (len == 0)
+           return dst;
+     
+      if (is_overlap(dst, src, len, len))
+           complain3("memcpy", dst, src, len);
+    
+        if ( dst > src ) {
+           d = (char *)dst + len - 1;
+           s = (char *)src + len - 1;
+          while ( len >= 4 ) {
+              *d-- = *s--;
+              *d-- = *s--;
+              *d-- = *s--;
+              *d-- = *s--;
+              len -= 4;
+           }
+           while ( len-- ) {
+              *d-- = *s--;
+           }
+        } else if ( dst < src ) {
+           d = (char *)dst;
+           s = (char *)src;
+           while ( len >= 4 ) {
+              *d++ = *s++;
+              *d++ = *s++;
+              *d++ = *s++;
+              *d++ = *s++;
+              len -= 4;
+           }
+           while ( len-- ) {
+              *d++ = *s++;
+           }
+        }
+        return dst;
+     }
+c．已知atoi的函数原型：int atoi(const char * string);其中string是数字字符串。(重点)
+int atoi(char const *string)
+{
+int value;
+value = 0;
+while(*string >= '0'&&*string <= '9')
+{
+value *= 10;
+value += *string - '0';
+++string;
+}
+if(*string != '0')
+value = 0;
+
+return value;
+}
+
+
+5. 链表题：一个链表的结点结构
+struct Node
+{
+int data ;
+Node *next ;
+};
+typedef struct Node Node ;
+
+(1)已知链表的头结点head,写一个函数把这个链表逆序 ( Intel)
+
+Node * ReverseList(Node *head) //链表逆序
+{
+if ( head == NULL || head->next == NULL )
+return head;
+Node *p1 = head ;
+Node *p2 = p1->next ;
+Node *p3 = p2->next ;
+p1->next = NULL ;
+while ( p3 != NULL )
+{
+p2->next = p1 ;
+p1 = p2 ;
+p2 = p3 ;
+p3 = p3->next ;
+}
+p2->next = p1 ;
+head = p2 ;
+return head ;
+}
+(2)已知两个链表head1 和head2 各自有序，请把它们合并成一个链表依然有序。(保留所有结点，即便大小相同）
+Node * Merge(Node *head1 , Node *head2)
+{
+if ( head1 == NULL)
+return head2 ;
+if ( head2 == NULL)
+return head1 ;
+Node *head = NULL ;
+Node *p1 = NULL;
+Node *p2 = NULL;
+if ( head1->data < head2->data )
+{
+head = head1 ;
+p1 = head1->next;
+p2 = head2 ;
+}
+else
+{
+head = head2 ;
+p2 = head2->next ;
+p1 = head1 ;
+}
+Node *pcurrent = head ;
+while ( p1 != NULL && p2 != NULL)
+{
+if ( p1->data <= p2->data )
+{
+pcurrent->next = p1 ;
+pcurrent = p1 ;
+p1 = p1->next ;
+}
+else
+{
+pcurrent->next = p2 ;
+pcurrent = p2 ;
+p2 = p2->next ;
+}
+}
+if ( p1 != NULL )
+pcurrent->next = p1 ;
+if ( p2 != NULL )
+pcurrent->next = p2 ;
+return head ;
+}
+(3)已知两个链表head1 和head2 各自有序，请把它们合并成一个链表依然有序，这次要求用递归方法进行。 (Autodesk)
+答案：
+Node * MergeRecursive(Node *head1 , Node *head2)
+{
+if ( head1 == NULL )
+return head2 ;
+if ( head2 == NULL)
+return head1 ;
+Node *head = NULL ;
+if ( head1->data < head2->data )
+{
+head = head1 ;
+head->next = MergeRecursive(head1->next,head2);
+}
+else
+{
+head = head2 ;
+head->next = MergeRecursive(head1,head2->next);
+}
+return head ;
+}
+
+
+6. 如何判断一个单链表是有环的？（注意不能用标志位，最多只能用两个额外指针）
+   struct node { char val; node* next;}
+   bool check(const node* head) {} //return false : 无环；true: 有环
+
+一种O（n）的办法就是（搞两个指针，一个每次递增一步，一个每次递增两步，如果有环的话两者必然重合，反之亦然）：
+bool check(const node* head)
+{
+    if(head==NULL)  return false;
+    node *low=head, *fast=head->next;
+    while(fast!=NULL && fast->next!=NULL)
+    {
+        low=low->next;
+        fast=fast->next->next;
+        if(low==fast) return true;
+    }
+    return false;
+}
+
+
+
+7.用C语言完成以下这个子程序，要求：
+1，定义一个一维数组，数组大小为24。
+2，产生0-23的随机数。
+3，将产生的随机数存入数组，要求数组中的每个数据不能相同。
+4，补充说明：这个子程序要求每次调用后，这个数组 里面就存放了0-23这些数据，而且这些数据没有重复的。
+5，注意，C语言有随机数函数，可以用函数产生随机数。RAND（N）
+
+
+void RandArrayN(int *a,int n)
+{   int i,t,;
+    n=n-1;
+    for(i=0;i<=n;i++)  a[i]=0; // 全部清零，还没有置数的状态。
+    for(i=0;i<n;i++){          // 只循环了n-1次，每次置入的数据分别为n-1,n-2,...,1，最后剩余未置(非零)数的那个位置就本身已经置入0了。
+       while(a[t=rand(n)]!=0);  // 每次找一个未置数位置
+           // 若该位置已经放下一个数(不等于0)，则找下一个位置，直到找到为0的位置(还没有置入一个数)
+       a[t]=n-i;  // 第i次找到的位置置入数n-i,
+    }
+}
+void main()
+{ int a [N];
+  RandArrayN(a,N);
+}
+
+
+有一个数组a[1000]存放0--1000;要求每隔二个数删掉一个数，到末尾时循环至开头继续进行，求最后一个被删掉的数的原始下标位置。
+
+　　以7个数为例：
+
+　　{0,1,2,3,4,5,6,7} 0-->1-->2(删除)-->3-->4-->5(删除)-->6-->7-->0(删除)，如此循环直到最后一个数被删除。
+
+　　方法1：数组
+
+　　#include 
+
+　　using namespace std;
+　　#define null 1000
+　　int main()
+　　{
+　　int arr[1000];
+　　for (int i=0;i<1000;++i)
+　　arr[i]=i;
+　　int j=0;
+　　int count=0;
+　　while(count<999)
+　　{
+　　while(arr[j%1000]==null)
+　　j=(++j)%1000;
+　　j=(++j)%1000;
+　　while(arr[j%1000]==null)
+　　j=(++j)%1000;
+　　j=(++j)%1000;
+　　while(arr[j%1000]==null)
+　　j=(++j)%1000;
+　　arr[j]=null;
+　　++count;
+　　}
+　　while(arr[j]==null)
+　　j=(++j)%1000;
+　　cout<<< p> 
+　　return 0;
+}
+
+方法2：链表
+
+　　#include
+　　using namespace std;
+　　#define null 0
+　　struct node
+　　{
+　　int data;
+　　node* next;
+　　};
+　　int main()
+　　{
+　　node* head=new node;
+　　head->data=0;
+　　head->next=null;
+　　node* p=head;
+　　for(int i=1;i<1000;i++)
+　　{
+　　node* tmp=new node;
+　　tmp->data=i;
+　　tmp->next=null;
+　　head->next=tmp;
+　　head=head->next;
+　　}
+　　head->next=p;
+　　while(p!=p->next)
+　　{
+　　p->next->next=p->next->next->next;
+　　p=p->next->next;
+　　}
+　　cout<data;
+　　return 0;
+　　}
+
+8. 用宏定义写出swap(x，y)
+　　#define swap(x, y)\
+ 　　x = x + y;\
+ 　　y = x - y;\
+ 　　x = x - y;
+
+9.unsigned int intvert(unsigned int x,int p,int n)实现对x的进行转换,p为起始转化位,n为需要转换的长度,假设起始点在右边.如x=0b0001 0001,p=4,n=3转换后x=0b0110 0001(驱动)
+
+unsigned int intvert(unsigned int x,int p,int n){
+ 　　unsigned int _t = 0;
+ 　　unsigned int _a = 1;
+ 　　for(int i = 0; i < n; ++i){
+ 　　_t |= _a;
+ 　　_a = _a << 1;
+ 　　}
+ 　　_t = _t << p;
+ 　　x ^= _t;
+ 　　return x;
+ 　　}
+
+第四阶段：
+#include<stdio.h>
+#include<stdlib.h>
+
+int   main(void)
+{
+       union A{
+         char a;
+         char y:3;
+         char z:3;
+         char x:2;
+       }a;
+
+       a.a = 0x67;
+       printf("a.a =%0x a.x=%0x \t a.y=%0x\t a.z=%0x\n",a.a, a.x, a.y, a.z );
+       return 0;
+}
+结果
+a.a =67 a.x=ffffffff     a.y=ffffffff a.z=ffffffff
+a.a =64 a.x=0 a.y=fffffffc a.z=fffffffc
+a.a =65 a.x=1 a.y=fffffffd a.z=fffffffd
+
+很久没动c语言了，很多基础性的东西都没有深入学习。今天看到关于联合体位域面试题，想了半天才知道程序答案的来由～～汗颜～～
+如果单从位域来理解这个还是简单，问题的关键是理解其在计算机内的存取规则。
+对a.a=64, 单从取位(二进制)上可知a.x=00, a.y=101, a.z=101.目前通用计算机x86大都是32位机，我的机器也是32位，在存取上默认是存取32位。对每个数而言第一位是符号位，补码存储。那么可以理解a.x的补码就是00000000, a.y的补码就是11111100, a.z的补码就是11111100.这样看比较自然，但如果输出结果是10进制，就会觉得难以理解。当然关键还是对数据的存取规则和编码的熟悉。
+a.a=0x64的10进制结果是a.x=0, a.y=-4 ,a.z=-4
+补充一点，union内的变量顺序对结果不影响（每次只可能有一种解释是合理的，这个跟struct显然不同）
+
+关于位域在结构体的应用主要要注意内存对齐规则的理解和空域的理解
+
+使用位域的主要目的是压缩存储，其大致规则为：
+1)   如果相邻位域字段的类型相同，且其位宽之和小于类型的sizeof大小，则后面的字段将紧邻前一个字段存储，直到不能容纳为止； 
+2)   如果相邻位域字段的类型相同，但其位宽之和大于类型的sizeof大小，则后面的字段将从新的存储单元开始，其偏移量为其类型大小的整数倍； 
+3)   如果相邻的位域字段的类型不同，则各编译器的具体实现有差异，VC6采取不压缩方式，Dev-C++采取压缩方式； 
+4)   如果位域字段之间穿插着非位域字段，则不进行压缩； 
+5)   整个结构体的总大小为最宽基本类型成员大小的整数倍。
+
+#include <stdio.h>
+int main()
+{
+union
+{
+            struct
+            {
+                     unsigned short s1:3;
+                     unsigned short s2:3;
+                     unsigned short s3:3;
+            }x;
+            char c;
+}v;
+v.c=100;
+
+printf("%d\n",sizeof(v));
+printf("s1=%d\n",v.x.s1);
+printf("s2=%d\n",v.x.s2);
+printf("s3=%d\n",v.x.s3);
+return 0;
+}
+fc6--linux下gcc-4.1.1
+2
+s1=4
+s2=4
+s3=5
+windows xp2下vc6.0
+2
+s1=4
+s2=4
+s3=1
+
+可见s3的结果并不一样vc6.0的结果如果只是按位取，就很好理解，这样跟之前的union的存取规则又不一样了～～而对于gcc-4.1.1，s3=5还没想出该结果的原因。同时考虑
+struct
+            {
+                     unsigned short s1:3;
+                     unsigned short s2:3;
+                     unsigned short s3:3;
+    unsigned short s4:7;
+            }x;
+   最后s4的结果更加扑朔迷离～～请大家多指点～·
+#include<stdio.h>
+#include<stdlib.h>
+
+int   main(void)
+{
+       union A{
+         char a;
+         char y:3;
+         char z:3;
+         char x:2;
+       }a;
+
+       a.a = 0x67;
+       printf("a.a =%0x a.x=%0x \t a.y=%0x\t a.z=%0x\n",a.a, a.x, a.y, a.z );
+       return 0;
+}
+结果
+a.a =67 a.x=ffffffff     a.y=ffffffff a.z=ffffffff
+a.a =64 a.x=0 a.y=fffffffc a.z=fffffffc
+a.a =65 a.x=1 a.y=fffffffd a.z=fffffffd
+
+很久没动c语言了，很多基础性的东西都没有深入学习。今天看到关于联合体位域面试题，想了半天才知道程序答案的来由～～汗颜～～
+如果单从位域来理解这个还是简单，问题的关键是理解其在计算机内的存取规则。
+对a.a=64, 单从取位(二进制)上可知a.x=00, a.y=101, a.z=101.目前通用计算机x86大都是32位机，我的机器也是32位，在存取上默认是存取32位。对每个数而言第一位是符号位，补码存储。那么可以理解a.x的补码就是00000000, a.y的补码就是11111100, a.z的补码就是11111100.这样看比较自然，但如果输出结果是10进制，就会觉得难以理解。当然关键还是对数据的存取规则和编码的熟悉。
+a.a=0x64的10进制结果是a.x=0, a.y=-4 ,a.z=-4
+补充一点，union内的变量顺序对结果不影响（每次只可能有一种解释是合理的，这个跟struct显然不同）
+
+关于位域在结构体的应用主要要注意内存对齐规则的理解和空域的理解
+使用位域的主要目的是压缩存储，其大致规则为：
+1)   如果相邻位域字段的类型相同，且其位宽之和小于类型的sizeof大小，则后面的字段将紧邻前一个字段存储，直到不能容纳为止； 
+2)   如果相邻位域字段的类型相同，但其位宽之和大于类型的sizeof大小，则后面的字段将从新的存储单元开始，其偏移量为其类型大小的整数倍； 
+3)   如果相邻的位域字段的类型不同，则各编译器的具体实现有差异，VC6采取不压缩方式，Dev-C++采取压缩方式； 
+4)   如果位域字段之间穿插着非位域字段，则不进行压缩； 
+5)   整个结构体的总大小为最宽基本类型成员大小的整数倍。
+
+#include <stdio.h>
+int main()
+{
+union
+{
+            struct
+            {
+                     unsigned short s1:3;
+                     unsigned short s2:3;
+                     unsigned short s3:3;
+            }x;
+            char c;
+}v;
+v.c=100;
+
+printf("%d\n",sizeof(v));
+printf("s1=%d\n",v.x.s1);
+printf("s2=%d\n",v.x.s2);
+printf("s3=%d\n",v.x.s3);
+return 0;
+}
+fc6--linux下gcc-4.1.1
+2
+s1=4
+s2=4
+s3=5
+windows xp2下vc6.0
+2
+s1=4
+s2=4
+s3=1
+
+可见s3的结果并不一样vc6.0的结果如果只是按位取，就很好理解，这样跟之前的union的存取规则又不一样了～～而对于gcc-4.1.1，s3=5还没想出该结果的原因。同时考虑
+struct
+            {
+                     unsigned short s1:3;
+                     unsigned short s2:3;
+                     unsigned short s3:3;
+    unsigned short s4:7;
+            }x;
+   最后s4的结果更加扑朔迷离～～请大家多指点～·
+
+
+C++的static有两种用法：面向过程程序设计中的static和面向对象程序设计中的static。前者应用于普通变量和函数，不涉及类；后者主要说明static在类中的作用。
+
+
+一、面向过程设计中的static
+
+1、静态全局变量
+
+在全局变量前，加上关键字static，该变量就被定义成为一个静态全局变量。静态全局变量有以下特点：
+该变量在全局数据区分配内存；
+未经初始化的静态全局变量会被程序自动初始化为0（自动变量的值是随机的，除非它被显式初始化）；
+静态全局变量在声明它的整个文件都是可见的，而在文件之外是不可见的；
+静态变量都在全局数据区分配内存，包括后面将要提到的静态局部变量。对于一个完整的程序，在内存中的分布情况如下图：
+代码区
+全局数据区
+堆区
+栈区
+
+一般程序的由new产生的动态数据存放在堆区，函数内部的自动变量存放在栈区。自动变量一般会随着函数的退出而释放空间，静态数据（即使是函数内部的静 态局部变量）也存放在全局数据区。全局数据区的数据并不会因为函数的退出而释放空间。
+
+的确，定义全局变量就可以实现变量在文件中的共享，但定义静态全局变量还有以下好处：
+静态全局变量不能被其它文件所用；
+其它文件中可以定义相同名字的变量，不会发生冲突；
+
+2、静态局部变量
+
+在局部变量前，加上关键字static，该变量就被定义成为一个静态局部变量。通常，在函数体内定义了一个变量，每当程序运行到该语句时都会给该局部变量分配栈内存。但随着程序退出函数体，系统就会收回栈内存，局部变量也相应失效。
+但有时候我们需要在两次调用之间对变量的值进行保存。通常的想法是定义一个全局变量来实现。但这样一来，变量已经不再属于函数本身了，不再仅受函数的控制，给程序的维护带来不便。
+静态局部变量正好可以解决这个问题。静态局部变量保存在全局数据区，而不是保存在栈中，每次的值保持到下一次调用，直到下次赋新值。
+
+example:
+
+void foo()
+{
+static int a;
+a++;
+cout<<a<<endl;
+}
+int main()
+{
+foo();
+foo();
+foo();
+return 0;
+}
+
+结果是 1 2 3 每次foo（）退出后，并未销毁变量a，因为它是存放在全局数据区的，不是栈空间。
+静态局部变量有以下特点：
+
+该变量在全局数据区分配内存；
+静态局部变量在程序执行到该对象的声明处时被首次初始化，即以后的函数调用不再进行初始化；
+静态局部变量一般在声明处初始化，如果没有显式初始化，会被程序自动初始化为0；
+它始终驻留在全局数据区，直到程序运行结束。但其作用域为局部作用域，当定义它的函数或语句块结束时，其作用域随之结束；
+
+3、静态函数
+
+在函数的返回类型前加上static关键字,函数即被定义为静态函数。静态函数与普通函数不同，它只能在声明它的文件当中可见，不能被其它文件使用。
+
+静态函数的例子：
+
+//Example 4
+
+#include <iostream.h>
+
+static void fn();//声明静态函数
+
+void main()
+
+{
+
+fn();
+
+}
+
+void fn()//定义静态函数
+{
+int n=10; cout<<n<<endl;
+}
+定义静态函数的好处：
+静态函数不能被其它文件所用；
+其它文件中可以定义相同名字的函数，不会发生冲突；
+
+
+二、面向对象的static关键字（类中的static关键字）
+
+1、静态数据成员
+
+在类内数据成员的声明前加上关键字static，该数据成员就是类内的静态数据成员。先举一个静态数据成员的例子。
+
+可以看出，静态数据成员有以下特点：
+对于非静态数据成员，每个类对象都有自己的拷贝。而静态数据成员被当作是类的成员。无论这个类的对象被定义了多少个，静态数据成员在程序中也只有一份拷贝，由该类型的所有对象共享访问。也就是说，静态数据成员是该类的所有对象所共有的。对该类的多个对象来说，静态数据成员只分配一次内存，供所有对象共用。所以，静态数据成员的值对每个对象都是一样的，它的值可以更新；
+静态数据成员存储在全局数据区。静态数据成员定义时要分配空间，所以不能在类声明中定义。在Example 5中，语句int Myclass::Sum=0;是定义静态数据成员；
+静态数据成员和普通数据成员一样遵从public,protected,private访问规则；
+因为静态数据成员在全局数据区分配内存，属于本类的所有对象共享，所以，它不属于特定的类对象，在没有产生类对象时其作用域就可见，即在没有产生类的实例时，我们就可以操作它；
+静态数据成员初始化与一般数据成员初始化不同。静态数据成员初始化的格式为：
+＜数据类型＞＜类名＞::＜静态数据成员名＞=＜值＞
+类的静态数据成员有两种访问形式：
+＜类对象名＞.＜静态数据成员名＞ 或 ＜类类型名＞::＜静态数据成员名＞
+如果静态数据成员的访问权限允许的话（即public的成员），可在程序中，按上述格式来引用静态数据成员 ；
+静态数据成员主要用在各个对象都有相同的某项属性的时候。比如对于一个存款类，每个实例的利息都是相同的。所以，应该把利息设为存款类的静态数据成员。这有两个好处，第一，不管定义多少个存款类对象，利息数据成员都共享分配在全局数据区的内存，所以节省存储空间。第二，一旦利息需要改变时，只要改变一次，则所有存款类对象的利息全改变过来了；
+同全局变量相比，使用静态数据成员有两个优势：
+静态数据成员没有进入程序的全局名字空间，因此不存在与程序中其它全局名字冲突的可能性；
+可以实现信息隐藏。静态数据成员可以是private成员，而全局变量不能；
+
+2、静态成员函数
+与静态数据成员一样，我们也可以创建一个静态成员函数，它为类的全部服务而不是为某一个类的具体对象服务。静态成员函数与静态数据成员一样，都是类的内部 实现，属于类定义的一部分。普通的成员函数一般都隐含了一个this指针，this指针指向类的对象本身，因为普通成员函数总是具体的属于某个类的具体对象的。通常情况下，this 是缺省的。如函数fn()实际上是this->fn()。但是与普通函数相比，静态成员函数由于不是与任何的对象相联系，因此它不具有this指针。从这个意义上讲，它无法访问属于类对象的非静态数据成员，也无法访问非静态成员函数，它只能调用其余的静态成员函数。
+
+关于静态成员函数，可以总结为以下几点：
+出现在类体外的函数定义不能指定关键字static；
+静态成员之间可以相互访问，包括静态成员函数访问静态数据成员和访问静态成员函数；
+非静态成员函数可以任意地访问静态成员函数和静态数据成员；
+静态成员函数不能访问非静态成员函数和非静态数据成员；
+由于没有this指针的额外开销，因此静态成员函数与类的全局函数相比速度上会有少许的增长；
+调用静态成员函数，可以用成员访问操作符(.)和(->)为一个类的对象或指向类对象的指针调用静态成员函数，也可以直接使用如下格式：
+＜类名＞::＜静态成员函数名＞（＜参数表＞）
+调用类的静态成员函数。
+
+ 
+
+堆和栈的区别
+
+
+一般认为在c中分为这几个存储区
+1栈 - 有编译器自动分配释放
+2堆 - 一般由程序员分配释放，若程序员不释放，程序结束时可能由OS回收
+3全局区（静态区），全局变量和静态变量的存储是放在一块的，初始化的全局变量和静
+态变量在一块区域，未初始化的全局变量和未初始化的静态变量在相邻的另一块区域。
+- 程序结束释放
+4另外还有一个专门放常量的地方。 - 程序结束释放
+在函数体中定义的变量通常是在栈上，用malloc, calloc, realloc等分配内存的函数分
+配得到的就是在堆上。在所有函数体外定义的是全局量，加了static修饰符后不管在哪
+里都存放在全局区（静态区）,在所有函数体外定义的static变量表示在该文件中有效，
+不能extern到别的文件用，在函数体内定义的static表示只在该函数体内有效。另外，
+函数中的"adgfdf"这样的字符串存放在常量区。
+比如：
+int a = 0; 全局初始化区
+char *p1; 全局未初始化区
+main()
+{
+int b; 栈
+char s[] = "abc";栈
+char *p2; 栈
+char *p3 = "123456"; 123456\0在常量区，p3在栈上。
+static int c =0； 全局（静态）初始化区
+p1 = (char *)malloc(10);
+p2 = (char *)malloc(20);
+分配得来得10和20字节的区域就在堆区。
+strcpy(p1, "123456"); 123456\0放在常量区，编译器可能会将它与p3所指向的"12345
+6"优化成一块。
+}
+还有就是函数调用时会在栈上有一系列的保留现场及传递参数的操作。
+栈的空间大小有限定，vc的缺省是2M。栈不够用的情况一般是程序中分配了大量数组和
+递归函数层次太深。有一点必须知道，当一个函数调用完返回后它会释放该函数中所有
+的栈空间。栈是由编译器自动管理的，不用你操心。
+堆是动态分配内存的，并且你可以分配使用很大的内存。但是用不好会产生内存泄漏。
+并且频繁地malloc和free会产生内存碎片（有点类似磁盘碎片），因为c分配动态内存时
+是寻找匹配的内存的。而用栈则不会产生碎片。
+在栈上存取数据比通过指针在堆上存取数据快些。
+一般大家说的堆栈和栈是一样的，就是栈(stack)，而说堆时才是堆heap.
+栈是先入后出的，一般是由高地址向低地址生长。
+
+
+堆(heap)和栈(stack)是C/C++编程不可避免会碰到的两个基本概念。首先，这两个概念
+都可以在讲数据结构的书中找到，他们都是基本的数据结构，虽然栈更为简单一些。
+在具体的C/C++编程框架中，这两个概念并不是并行的。对底层机器代码的研究可以揭示
+，栈是机器系统提供的数据结构，而堆则是C/C++函数库提供的。
+具体地说，现代计算机(串行执行机制)，都直接在代码底层支持栈的数据结构。这体现
+在，有专门的寄存器指向栈所在的地址，有专门的机器指令完成数据入栈出栈的操作。
+这种机制的特点是效率高，支持的数据有限，一般是整数，指针，浮点数等系统直接支
+持的数据类型，并不直接支持其他的数据结构。因为栈的这种特点，对栈的使用在程序
+中是非常频繁的。对子程序的调用就是直接利用栈完成的。机器的call指令里隐含了把
+返回地址推入栈，然后跳转至子程序地址的操作，而子程序中的ret指令则隐含从堆栈中
+弹出返回地址并跳转之的操作。C/C++中的自动变量是直接利用栈的例子，这也就是为什
+么当函数返回时，该函数的自动变量自动失效的原因(因为 颜换指戳说饔们暗 状态)。
+ 
+和栈不同，堆的数据结构并不是由系统(无论是机器系统还是操作系统)支持的，而是由
+函数库提供的。基本的malloc/realloc/free函数维护了一套内部的堆数据结构。当程序
+使用这些函数去获得新的内存空间时，这套函数首先试图从内部堆中寻找可用的内存空
+间，如果没有可以使用的内存空间，则试图利用系统调用来动态增加程序数据段的内存
+大小，新分配得到的空间首先被组织进内部堆中去，然后再以适当的形式返回给调用者
+。当程序释放分配的内存空间时，这片内存空间被返回内部堆结构中，可能会被适当的
+处理(比如和其他空闲空间合并成更大的空闲空间)，以更适合下一次内存分配申请。这
+套复杂的分配机制实际上相当于一个内存分配的缓冲池(Cache)，使用这套机制有如下若
+干原因：
+1. 系统调用可能不支持任意大小的内存分配。有些系统的系统调用只支持固定大小及其
+倍数的内存请求(按页分配)；这样的话对于大量的小内存分类来说会造成浪费。
+2. 系统调用申请内存可能是代价昂贵的。系统调用可能涉及用户态和核心态的转换。
+3. 没有管理的内存分配在大量复杂内存的分配释放操作下很容易造成内存碎片。
+堆和栈的对比
+从以上知识可知，栈是系统提供的功能，特点是快速高效，缺点是有限制，数据不灵活
+；而栈是函数库提供的功能，特点是灵活方便，数据适应面广泛，但是效率有一定降低
+。栈是系统数据结构，对于进程/线程是唯一的；堆是函数库内部数据结构，不一定唯一
+。不同堆分配的内存无法互相操作。栈空间分静态分配和动态分配两种。静态分配是编
+译器完成的，比如自动变量(auto)的分配。动态分配由alloca函数完成。栈的动态分配
+无需释放(是自动的)，也就没有释放函数。为可移植的程序起见，栈的动态分配操作是
+不被鼓励的！堆空间的分配总是动态的，虽然程序结束时所有的数据空间都会被释放回
+系统，但是精确的申请内存/释放内存匹配是良好程序的基本要素。
+
+可以放一块思考
+堆和栈的生长方向恰好相反，
+|--------------| 低地址
+| 堆 |
+|--------------|
+| | |
+| I |
+| |
+| ^ |
+| 栈 | 高地址
+-----------------
+所以计算机中的堆和栈经常时放一块讲的
+node 一般不是必要就不要动态创建，最讨厌把new出来的东西当局部变量用，用万了马上
+delete 的做法.
+理由
+1.栈分配比堆快，只需要一条指令就呢给配所有的局部变量
+2.栈不会出现内存碎片
+3.栈对象好管理
+当然，某些情况下也要那么写,比如
+1.对象很大
+2.对象需要在某个特定的时刻构造或析够
+3.类只允许对象动态创建,比如VCL的大多数类
+
+当然，必须用堆对象时也不能躲避
+
+ 对于类的申明（还没有定义）来说，可以有限的方式使用它。如我们可以声明指向该类类型的指针或引用。允许指针和引用是因为它们都有固定的大小，而与它们指向的对象的大小无关。只有到完全定义了该类才能对这些指针和引用解引用。
+       只有对类定义了，才能声明该类类型对象。在程序中还没有看到类定义之前，数据成员只能是该类类型的指针或引用。  
+
+       当一个类的类头被看到时，它就被视为已经声明了，所以一个类可以有指向自身类型的指针或引用作为数据成员。只有一个类的类体已经完整时，它才被视为已经被定义。
+
+       所以可以有如下形式：
+    class LinkScreen{
+          Screen window;
+          LinkScreen *next;
+          LinkScreen *prev;
+    }
+
+
+////////
+//无答案
+////////
+
+21:打印一个N*N的方阵，N为每边字符的个数（ 3〈N〈20 ），要求最外层为“X”，第二层为“Y”，从第三层起每层依次打印数字0，1，2，3，...
+例子：当N =5，打印出下面的图形：
+X X X X X
+X Y Y Y X
+X Y 0 Y X
+X Y Y Y X
+X X X X X
+
+//4**********************************************
+//交换两个变量的值,不使用第三个变量,即a=3,b=5交换
+//后b=3,a=5
+
+//5**************************************************
+//求输出结果
+#define N 100
+void GetMemory1(char*p)
+{
+p=(char*)malloc(sizeof(char)*N);
+strcpy(p,"Have a good day!");
+}
+char*GetMemory2(void)
+{
+char p[]="Have a good day!";
+return p;
+}
+void main(void)
+{
+char*str1=NULL,*str2=NULL;
+GetMemory1(str1);
+GetMemory2(str2);
+printf("\nstr1:%s",str1);
+printf("\nstr2:%s",str2);
+
+//7**********************************************
+//N个结点链表,每个结点中存放一个字符,判断链表存放的字符是否
+//中心对称,即a b c c b a或a b c b a,补充程序
+typedef struct Node
+{
+int data;
+struct Node*next;
+}NODE;
+bool Is_symmeic(NODE*head,*int n)
+{
+char D[N];
+int i,d;
+__________;
+for(i=0;i<d;i++)
+{
+   D[i]=head->data;
+   head=head->next;
+}
+if(__________)
+{
+   head=head->next;
+}
+while(head)
+{
+   _______________;
+   if(D[i]!=head->data)
+   {
+    return false;
+   }
+   head=head->next;
+}
+return true;
+}
+
+//8*************************************
+//str中只含有大写和小写字母函数change_move(char*str)将字符串中大写改成*并
+//移到前面小写后返回*的个数
+//如AabBdcYY改为*****abd,返回5
+int chang_move(char*str)
+{
+int len,i,curstr=-1;
+len=strlen(str);
+for(i=len-1;i>=0;i--)
+{
+   if(str[i]>='A'&&str[i]<='Z')
+    {
+     str[i]='*';
+     if(cursor==-1)
+     {
+      cursor=i;
+     }
+     else if(cursor>i)
+     {
+      _____________;
+      str[i]='*';
+      _____________;
+     
+     }
+}
+return____________;
+}
+//9***********************************************
+//求两个字符串的第一个公共子串,并返回该子串
+//如:"a b c d e f g e h i" "a a c d e f * * g e h i"
+//第一个为"c d e f";不许用strcmp()
+char*Maxf(char*str1,char*str2)
+{
+}
+3.求输出结果
+#include<stdio.h>
+void sub(char*s,int num)
+{
+ int i ,j=num;
+ char t;
+ while(j-->1)
+ {
+   for(i=0;i<j;i++)
+   {
+     if(s[i]<s[i+1])
+     {
+       t=s[i];
+       s[i]=s[i+1];
+       s[i+1]=t;
+     }
+   }
+ }
+}
+main()
+{
+ char *s="CEAeded";
+ sub(s,6);
+ printf("%s\n",s)
+}
+输出结果：运行时程序崩溃，
+
+//6******************************************************
+//构造N个结点的单链表返回链表头指针,要求链表中各结点顺序
+//与结点数据输入顺序相反,例如输入1,2,3,4,5,形成的链表为
+//head->5 4 3 2 1 ,补充程序
+#define N 10
+typedef struct Node
+{
+int data;
+struct Node*next;
+}NODE;
+int Get_Data(int i);//定义省略
+Node*Create_u()
+{
+int i;
+NODE*p,*Head=NULL;
+for(i=0;i<N;i++)
+{
+   VP=New NODE;
+   P->Data=Get_Data(i);
+   ________________;
+   ________________;
+}
+return Head;
+}
+其实就是个头插法
+
+
+
+5 设周期性任务P1,P2,P3的周期为T1,T2,T3分别为100，150，400；执行时间分别为20，40，100。请设计一种调度算法进行任务调度，满足任务执行周期及任务周期。
+
+  8.enum string
+    {
+    x1,
+    x2,
+    x3=10,
+    x4,
+    x5,
+    }x;
+   问x= 0x801005，0x8010f4  ;
+
+  9.unsigned char *p1;
+    unsigned long *p2;
+    p1=(unsigned char *)0x801000;
+    p2=(unsigned long *)0x810000;
+    请问p1+5=  ;
+        p2+5=  ;
+
+三.选择题:
+  1.Ethternet链接到Internet用到以下那个协议?
+  A.HDLC;B.ARP;C.UDP;D.TCP;E.ID
+  2.属于网络层协议的是:
+  A.TCP;B.IP;C.ICMP;D.X.25
+  3.Windows消息调度机制是:
+  A.指令队列;B.指令堆栈;C.消息队列;D.消息堆栈;
+  4.unsigned short hash(unsigned short key)
+    {
+      return (key>>)%256
+    }
+   请问hash(16),hash(256)的值分别是:
+  A.1.16;B.8.32;C.4.16;D.1.32
+四.找错题:
+  1.请问下面程序有什么错误?
+   int a[60][250][1000],i,j,k;
+   for(k=0;k<=1000;k++)
+    for(j=0;j<250;j++)
+     for(i=0;i<60;i++)
+      a[i][j][k]=0;
+把循环语句内外换一下
+  2.#define Max_CB 500
+    void LmiQueryCSmd(Struct MSgCB * pmsg)
+     {
+     unsigned char ucCmdNum;
+     ......
+    
+     for(ucCmdNum=0;ucCmdNum<Max_CB;ucCmdNum++)
+      {
+      ......;
+      }
+死循环
+   3.以下是求一个数的平方的程序,请找出错误:
+    #define SQUARE(a)((a)*(a))
+    int a=5;
+    int b;
+    b=SQUARE(a++);
+   4.typedef unsigned char BYTE
+     int examply_fun(BYTE gt_len; BYTE *gt_code)
+      {  
+      BYTE *gt_buf;
+      gt_buf=(BYTE *)MALLOC(Max_GT_Length);
+      ......
+      if(gt_len>Max_GT_Length)
+        {
+        return GT_Length_ERROR;  
+        }
+        .......
+      }
+五.问答题:
+   1.IP Phone的原理是什么?
+IPV6
+   2.TCP/IP通信建立的过程怎样，端口有什么作用？
+三次握手，确定是哪个应用程序使用该协议
+   3.1号信令和7号信令有什么区别，我国某前广泛使用的是那一种？
+   4.列举5种以上的电话新业务？
+
+
+3．Windows下的内存是如何管理的？
+4．介绍.Net和.Net的安全性。
+5．客户端如何访问.Net组件实现Web Service？
+6．C/C++编译器中虚表是如何完成的？
+7．谈谈COM的线程模型。然后讨论进程内/外组件的差别。
+
+4.
+#include   string.h
+main(void)
+{   char   *src="hello,world";
+    char   *dest=NULL;
+    dest=(char   *)malloc(strlen(src));
+    int   len=strlen(str);
+    char   *d=dest;
+    char   *s=src[len];
+    while(len--!=0)
+      d++=s--;
+    printf("%s",dest);
+}
+找出错误！！
+#include   "string.h"
+#include "stdio.h"
+#include "malloc.h"
+main(void)
+{   
+char   *src="hello,world";
+    char   *dest=NULL;
+    dest=(char   *)malloc(sizeof(char)*(strlen(src)+1));
+    int   len=strlen(src);
+    char   *d=dest;
+    char   *s=src+len-1;
+    while(len--!=0)
+      *d++=*s--;
+*d='\0';
+    printf("%s",dest);
+}
+
+1.    简述一个Linux驱动程序的主要流程与功能。
+
+
+
+
+面试题
+1.链表和数组的区别在哪里？
+2.编写实现链表排序的一种算法。说明为什么你会选择用这样的方法？
+3.编写实现数组排序的一种算法。说明为什么你会选择用这样的方法？
+4.请编写能直接实现strstr()函数功能的代码。
+5.编写反转字符串的程序，要求优化速度、优化空间。
+6.在链表里如何发现循环链接？
+7.给出洗牌的一个算法，并将洗好的牌存储在一个整形数组里。
+8.写一个函数，检查字符是否是整数，如果是，返回其整数值。（或者：怎样只用4行代码 ,编写出一个从字符串到长整形的函数？）
+9.给出一个函数来输出一个字符串的所有排列。
+10.请编写实现malloc()内存分配函数功能一样的代码。
+11.给出一个函数来复制两个字符串A和B。字符串A的后几个字节和字符串B的前几个字节重叠。
+12.怎样编写一个程序，把一个有序整数数组放到二叉树中？
+13.怎样从顶部开始逐层打印二叉树结点数据？请编程。
+14.怎样把一个链表掉个顺序（也就是反序，注意链表的边界条件并考虑空链表）？
+
+三、填空题：（共8题，每题3分，共24分）
+1. 一个大小为320 X 192，颜色为灰度索引色的设备相关位图有______字节。如果此位图颜色为24位真彩色，则它的大小有______字节。
+2. Windows API的中文意义是____ windows应用程序接口___。
+3. 计算反正弦的库函数是__asin()____；计算浮点数绝对值的库函数是__fabs()____；计算浮点数n次方的库函数是__pow()____；将浮点数转化为字符串的库函数是___fcvt()___。
+4. 如果i等于5，那么( ++i ) – -的返回值是__6__。
+5. API LoadBitmap()的功能是从__指定的模块和或应用程序实例__中读取位图数据到内存。
+6. new和__delete___对应，malloc和_free___对应，他们之间_ 不能__交叉混用。calloc的功能是__为数组动态分配内存___，realloc的功能是_改变原有内存区域的大小_。
+7. SendMessage和PostMessage都会向窗体发送一个消息，但SendMessage__将一条消息发送到指定窗口,立即处理__而PostMessage__将一条消息投递到指定窗口的消息队列,不需要立即处理___。
+8. 输出指定圆心、半径、边数的圆上的点：
+const int nCount = 12;
+const double dOrgX = 5.0,
+dOrgY = 3.0;
+const double dRadius = 2.0;
+for( int i = 0; i < nCount; i++ )
+{
+double dAngle = M_PI * 2.0 / (double)nCount * i;
+cout << "第" << i << "点：X = " << ________; cout << ", Y = " << __________ << endl;
+}
+
+1.What will print out? 
+main() 
+{ 
+	char *p1=“name”; 
+	char *p2; 
+	p2=(char*)malloc(20); 
+	memset (p2, 0, 20); 
+	while(*p2++ = *p1++); 
+	printf(“%sn”,p2); 
+} 
+Answer:empty string.
+
+
+再次更新C++相关题集 
+1. 以下三条输出语句分别输出什么？[C易] 
+char str1[] = "abc"; 
+char str2[] = "abc"; 
+const char str3[] = "abc"; 
+const char str4[] = "abc"; 
+const char* str5 = "abc"; 
+const char* str6 = "abc"; 
+cout << boolalpha << ( str1==str2 ) << endl; // 输出什么？ 
+cout << boolalpha << ( str3==str4 ) << endl; // 输出什么？ 
+cout << boolalpha << ( str5==str6 ) << endl; // 输出什么？ 
+
+13. 非C++内建型别 A 和 B，在哪几种情况下B能隐式转化为A？[C++中等] 
+答： 
+a. class B : public A { ……} // B公有继承自A，可以是间接继承的 
+b. class B { operator A( ); } // B实现了隐式转化为A的转化 
+c. class A { A( const B& ); } // A实现了non-explicit的参数为B（可以有其他带默认值的参数）构造函数 
+d. A& operator= ( const A& ); // 赋值操作，虽不是正宗的隐式类型转换，但也可以勉强算一个 
+
+12. 以下代码中的两个sizeof用法有问题吗？[C易] 
+void UpperCase( char str[] ) // 将 str 中的小写字母转换成大写字母 
+{ for( size_t i=0; i<sizeof(str)/sizeof(str[0]); ++i ) 
+if( 'a'<=str[i] && str[i]<='z' ) 
+str[i] -= ('a'-'A' ); 
+} char str[] = "aBcDe"; 
+cout << "str字符长度为: " << sizeof(str)/sizeof(str[0]) << endl; 
+UpperCase( str ); 
+cout << str << endl; 
+
+7. 以下代码有什么问题？[C难] 
+void char2Hex( char c ) // 将字符以16进制表示 
+{ char ch = c/0x10 + '0'; if( ch > '9' ) ch += ('A'-'9'-1); 
+char cl = c%0x10 + '0'; if( cl > '9' ) cl += ('A'-'9'-1); 
+cout << ch << cl << ' '; 
+} char str[] = "I love 中国"; 
+for( size_t i=0; i<strlen(str); ++i ) 
+char2Hex( str[i] ); 
+cout << endl; 
+
+4. 以下代码有什么问题？[C++易] 
+struct Test 
+{ Test( int ) {} 
+Test() {} 
+void fun() {} 
+}; 
+void main( void ) 
+{ Test a(1); 
+a.fun(); 
+Test b(); 
+b.fun(); 
+} 
+5. 以下代码有什么问题？[C++易] 
+cout << (true?1:"1") << endl; 
+8. 以下代码能够编译通过吗，为什么？[C++易] 
+unsigned int const size1 = 2; 
+char str1[ size1 ]; 
+unsigned int temp = 0; 
+cin >> temp; 
+unsigned int const size2 = temp; 
+char str2[ size2 ]; 
+9. 以下代码中的输出语句输出0吗，为什么？[C++易] 
+struct CLS 
+{ int m_i; 
+CLS( int i ) : m_i(i) {} 
+CLS() 
+{ CLS(0); 
+} }; 
+CLS obj; 
+cout << obj.m_i << endl; 
+10. C++中的空类，默认产生哪些类成员函数？[C++易] 
+答： 
+class Empty 
+{ public: 
+Empty(); // 缺省构造函数 
+Empty( const Empty& ); // 拷贝构造函数 
+~Empty(); // 析构函数 
+Empty& operator=( const Empty& ); // 赋值运算符 
+Empty* operator&(); // 取址运算符 
+const Empty* operator&() const; // 取址运算符 const 
+}; 
+3. 以下两条输出语句分别输出什么？[C++难] 
+float a = 1.0f; 
+cout << (int)a << endl; 
+cout << (int&)a << endl; 
+cout << boolalpha << ( (int)a == (int&)a ) << endl; // 输出什么？ 
+float b = 0.0f; 
+cout << (int)b << endl; 
+cout << (int&)b << endl; 
+cout << boolalpha << ( (int)b == (int&)b ) << endl; // 输出什么？ 
+2. 以下反向遍历array数组的方法有什么错误？[STL易] 
+vector array; 
+array.push_back( 1 ); 
+array.push_back( 2 ); 
+array.push_back( 3 ); 
+for( vector::size_type i=array.size()-1; i>=0; --i ) // 反向遍历array数组 
+{ cout << array[i] << endl; 
+} 
+6. 以下代码有什么问题？[STL易] 
+typedef vector IntArray; 
+IntArray array; 
+array.push_back( 1 ); 
+array.push_back( 2 ); 
+array.push_back( 2 ); 
+array.push_back( 3 ); 
+// 删除array数组中所有的2 
+for( IntArray::iterator itor=array.begin(); itor!=array.end(); ++itor ) 
+{ if( 2 == *itor ) array.erase( itor ); 
+} 
+11. 写一个函数，完成内存之间的拷贝。[考虑问题是否全面] 
+答： 
+void* mymemcpy( void *dest, const void *src, size_t count )   
+{   
+char* pdest = static_cast<char*>( dest );   
+const char* psrc = static_cast<const char*>( src );   
+if( pdest>psrc && pdest<psrc+cout ) 能考虑到这种情况就行了   
+{   
+for( size_t i=count-1; i!=-1; --i )   
+pdest[i] = psrc[i];   
+}   
+else  
+{   
+for( size_t i=0; i<count; ++i )   
+pdest[i] = psrc[i];   
+}   
+return dest;   
+}   
+int main( void )   
+{   
+char str[] = "0123456789";   
+mymemcpy( str+1, str+0, 9 );   
+cout << str << endl;   
+  
+system( "Pause" );   
+return 0;   
+}
+嵌入式面试 01
+16、那种排序方法最快? （华为面试题）
+17、写出两个排序算法,问哪个好？（威盛） 
+18、编一个简单的求n!的程序 。（Infineon笔试试题） 
+19、用一种编程语言写n!的算法。（威盛VIA 2003.11.06 上海笔试试题） 
+20、用C语言写一个递归算法求N！；（华为面试题） 
+21、给一个C的函数，关于字符串和数组，找出错误；（华为面试题） 
+22、防火墙是怎么实现的？ （华为面试题） 
+23、你对哪方面编程熟悉？（华为面试题） 
+24、冒泡排序的原理。（新太硬件面题） 
+25、操作系统的功能。（新太硬件面题） 
+26、学过的计算机语言及开发的系统。（新太硬件面题） 
+27、一个农夫发现围成正方形的围栏比长方形的节省4个木桩但是面积一样.羊的数目和正 方形围栏的桩子的个数一样但是小于36，问有多少羊？（威盛） 
+28、C语言实现统计某个cell在某.v文件调用的次数(这个题目真bt) （威盛VIA2003.11.06 上海笔试试题） 
+29、用C语言写一段控制手机中马达振子的驱动程序。(威胜) 
+30、用perl或TCL/Tk实现一段字符串识别和比较的程序。（未知） 
+31、给出一个堆栈的结构，求中断后显示结果，主要是考堆栈压入返回地址存放在低端地 址还是高端。（未知） 
+32、一些DOS命令，如显示文件，拷贝，删除。（未知） 
+33、设计一个类，使得该类任何形式的派生类无论怎么定义和实现，都无法产生任何对象 实例。（IBM） 
+34、What is pre-emption? (Intel) 
+35、What is the state of a process if a resource is not available? (Intel) 
+36、三个 float a,b,c;问值（a b） c==(b a) c， (a b) c==(a c) b。(Intel) 
+37、把一个链表反向填空。 (lucent) 38、x^4 a*x^3 x^2 c*x d 最少需要做几次乘法？ (Dephi) ____________________________________________________________ 
+六、主观题 
+1、你认为你从事研发工作有哪些特点？（仕兰微面试题目） 
+2、说出你的最大弱点及改进方法。（威盛VIA 2003.11.06 上海笔试试题） 
+3、说出你的理想。说出你想达到的目标。 题目是英文出的，要用英文回答。（威盛VIA 2003.11.06 上海笔试试题） 
+4、我们将研发人员分为若干研究方向，对协议和算法理解（主要应用在网络通信、图象语音压缩方面）、电子系统方案的研究、用MCU、DSP编程实现电路功能、用ASIC设计技术 设计电路（包括MCU、DSP本身）、电路功能模块设计（包括模拟电路和数字电路）、集成 电路后端设计（主要是指综合及自动布局布线技术）、集成电路设计与工艺接口的研究. 你希望从事哪方面的研究？（可以选择多个方向。另外，已经从事过相关研发的人员可以详细描述你的研发经历）。（仕兰微面试题目） 
+5、请谈谈对一个系统设计的总体思路。针对这个思路，你觉得应该具备哪些方面的知识？（仕兰微面试题目） 
+6、设想你将设计完成一个电子电路方案。请简述用EDA软件（如PROTEL）进行设计（包括 原理图和PCB图）到调试出样机的整个过程。在各环节应注意哪些问题？电源的稳定，电 容的选取，以及布局的大小。（汉王笔试） 
+七、共同的注意点 
+1.一般情况下，面试官主要根据你的简历提问，所以一定要对自己负责，把简历上的东西搞明白； 
+2.个别招聘针对性特别强，就招目前他们确的方向的人，这种情况下，就要投其所好，尽量介绍其所关心的东西。 
+3.其实技术面试并不难，但是由于很多东西都忘掉了，才觉得有些难。所以最好在面试前把该看的书看看。 
+4.虽然说技术面试是实力的较量与体现，但是不可否认，由于不用面试官/公司所专领域及爱好不同，也有面试也有很大的偶然性，需要冷静对待。不能因为被拒，就否认自己或责骂公司。 
+5.面试时要take it easy，对越是自己钟情的公司越要这样。
+嵌入式面试 0
+DSP、嵌入式、软件等 
+1、请用方框图描述一个你熟悉的实用数字信号处理系统，并做简要的分析；如果没有，也可以自己设计一个简单的数字信号处理系统，并描述其功能及用途。（仕兰微面试题目）  
+2、数字滤波器的分类和结构特点。（仕兰微面试题目） 
+3、IIR，FIR滤波器的异同。（新太硬件面题） 
+4、拉氏变换与Z变换公式等类似东西，随便翻翻书把如.h(n)=-a*h(n-1) b*δ(n) a.求h(n)的z变换；b.问该系统是否为稳定系统；c.写出FIR数字滤波器的差分方程；（未知） 
+5、DSP和通用处理器在结构上有什么不同，请简要画出你熟悉的一种DSP结构图。（信威dsp软件面试题） 
+6、说说定点DSP和浮点DSP的定义（或者说出他们的区别）（信威dsp软件面试题） 
+7、说说你对循环寻址和位反序寻址的理解.（信威dsp软件面试题） 
+8、请写出【－8，7】的二进制补码，和二进制偏置码。用Q15表示出0.5和－0.5.（信威dsp软件面试题） 
+9、DSP的结构（哈佛结构）；（未知） 
+10、嵌入式处理器类型(如ARM)，操作系统种类（Vxworks,ucos,winCE,linux），操作系统方面偏CS方向了，在CS篇里面讲了；（未知） 
+11、有一个LDO芯片将用于对手机供电，需要你对他进行评估，你将如何设计你的测试项目？ 
+12、某程序在一个嵌入式系统（200M CPU，50M SDRAM）中已经最优化了，换到零一个系统（300M CPU，50M SDRAM）中是否还需要优化？ （Intel） 
+13、请简要描述HUFFMAN编码的基本原理及其基本的实现方法。（仕兰微面试题目） 
+14、说出OSI七层网络协议中的四层（任意四层）。（仕兰微面试题目） 
+15、A） （仕兰微面试题目） ＃i nclude void testf(int*p) { *p =1; } main() { int *n,m[2]; n=m; m[0]=1; m[1]=8; testf(n); printf("Data v　alue is %d ",*n); } ------------------------------ B) ＃i nclude void testf(int**p) { *p =1; } main() {int *n,m[2]; n=m; m[0]=1; m[1]=8; testf(&n); printf(Data v　alue is %d",*n); } 下面的结果是程序A还是程序B的？ Data v　alue is 8 那么另一段程序的结果是什么？ 
+嵌入式面试 01
+16、那种排序方法最快? （华为面试题）
+17、写出两个排序算法,问哪个好？（威盛） 
+18、编一个简单的求n!的程序 。（Infineon笔试试题） 
+19、用一种编程语言写n!的算法。（威盛VIA 2003.11.06 上海笔试试题） 
+20、用C语言写一个递归算法求N！；（华为面试题） 
+21、给一个C的函数，关于字符串和数组，找出错误；（华为面试题） 
+22、防火墙是怎么实现的？ （华为面试题） 
+23、你对哪方面编程熟悉？（华为面试题） 
+24、冒泡排序的原理。（新太硬件面题） 
+25、操作系统的功能。（新太硬件面题） 
+26、学过的计算机语言及开发的系统。（新太硬件面题） 
+27、一个农夫发现围成正方形的围栏比长方形的节省4个木桩但是面积一样.羊的数目和正 方形围栏的桩子的个数一样但是小于36，问有多少羊？（威盛） 
+28、C语言实现统计某个cell在某.v文件调用的次数(这个题目真bt) （威盛VIA2003.11.06 上海笔试试题） 
+29、用C语言写一段控制手机中马达振子的驱动程序。(威胜) 
+30、用perl或TCL/Tk实现一段字符串识别和比较的程序。（未知） 
+31、给出一个堆栈的结构，求中断后显示结果，主要是考堆栈压入返回地址存放在低端地 址还是高端。（未知） 
+32、一些DOS命令，如显示文件，拷贝，删除。（未知） 
+33、设计一个类，使得该类任何形式的派生类无论怎么定义和实现，都无法产生任何对象 实例。（IBM） 
+34、What is pre-emption? (Intel) 
+35、What is the state of a process if a resource is not available? (Intel) 
+36、三个 float a,b,c;问值（a b） c==(b a) c， (a b) c==(a c) b。(Intel) 
+37、把一个链表反向填空。 (lucent) 38、x^4 a*x^3 x^2 c*x d 最少需要做几次乘法？ (Dephi) ____________________________________________________________ 
+六、主观题 
+1、你认为你从事研发工作有哪些特点？（仕兰微面试题目） 
+2、说出你的最大弱点及改进方法。（威盛VIA 2003.11.06 上海笔试试题） 
+3、说出你的理想。说出你想达到的目标。 题目是英文出的，要用英文回答。（威盛VIA 2003.11.06 上海笔试试题） 
+4、我们将研发人员分为若干研究方向，对协议和算法理解（主要应用在网络通信、图象语音压缩方面）、电子系统方案的研究、用MCU、DSP编程实现电路功能、用ASIC设计技术 设计电路（包括MCU、DSP本身）、电路功能模块设计（包括模拟电路和数字电路）、集成 电路后端设计（主要是指综合及自动布局布线技术）、集成电路设计与工艺接口的研究. 你希望从事哪方面的研究？（可以选择多个方向。另外，已经从事过相关研发的人员可以详细描述你的研发经历）。（仕兰微面试题目） 
+5、请谈谈对一个系统设计的总体思路。针对这个思路，你觉得应该具备哪些方面的知识？（仕兰微面试题目） 
+6、设想你将设计完成一个电子电路方案。请简述用EDA软件（如PROTEL）进行设计（包括 原理图和PCB图）到调试出样机的整个过程。在各环节应注意哪些问题？电源的稳定，电 容的选取，以及布局的大小。（汉王笔试） 
+七、共同的注意点 
+1.一般情况下，面试官主要根据你的简历提问，所以一定要对自己负责，把简历上的东西搞明白； 
+2.个别招聘针对性特别强，就招目前他们确的方向的人，这种情况下，就要投其所好，尽量介绍其所关心的东西。 
+3.其实技术面试并不难，但是由于很多东西都忘掉了，才觉得有些难。所以最好在面试前把该看的书看看。 
+4.虽然说技术面试是实力的较量与体现，但是不可否认，由于不用面试官/公司所专领域及爱好不同，也有面试也有很大的偶然性，需要冷静对待。不能因为被拒，就否认自己或责骂公司。 
+5.面试时要take it easy，对越是自己钟情的公司越要这样。
+嵌入式面试 0
+DSP、嵌入式、软件等 
+1、请用方框图描述一个你熟悉的实用数字信号处理系统，并做简要的分析；如果没有，也可以自己设计一个简单的数字信号处理系统，并描述其功能及用途。（仕兰微面试题目）  
+2、数字滤波器的分类和结构特点。（仕兰微面试题目） 
+3、IIR，FIR滤波器的异同。（新太硬件面题） 
+4、拉氏变换与Z变换公式等类似东西，随便翻翻书把如.h(n)=-a*h(n-1) b*δ(n) a.求h(n)的z变换；b.问该系统是否为稳定系统；c.写出FIR数字滤波器的差分方程；（未知） 
+5、DSP和通用处理器在结构上有什么不同，请简要画出你熟悉的一种DSP结构图。（信威dsp软件面试题） 
+6、说说定点DSP和浮点DSP的定义（或者说出他们的区别）（信威dsp软件面试题） 
+7、说说你对循环寻址和位反序寻址的理解.（信威dsp软件面试题） 
+8、请写出【－8，7】的二进制补码，和二进制偏置码。用Q15表示出0.5和－0.5.（信威dsp软件面试题） 
+9、DSP的结构（哈佛结构）；（未知） 
+10、嵌入式处理器类型(如ARM)，操作系统种类（Vxworks,ucos,winCE,linux），操作系统方面偏CS方向了，在CS篇里面讲了；（未知） 
+11、有一个LDO芯片将用于对手机供电，需要你对他进行评估，你将如何设计你的测试项目？ 
+12、某程序在一个嵌入式系统（200M CPU，50M SDRAM）中已经最优化了，换到零一个系统（300M CPU，50M SDRAM）中是否还需要优化？ （Intel） 
+13、请简要描述HUFFMAN编码的基本原理及其基本的实现方法。（仕兰微面试题目） 
+14、说出OSI七层网络协议中的四层（任意四层）。（仕兰微面试题目） 
+15、A） （仕兰微面试题目） ＃i nclude void testf(int*p) { *p =1; } main() { int *n,m[2]; n=m; m[0]=1; m[1]=8; testf(n); printf("Data v　alue is %d ",*n); } ------------------------------ B) ＃i nclude void testf(int**p) { *p =1; } main() {int *n,m[2]; n=m; m[0]=1; m[1]=8; testf(&n); printf(Data v　alue is %d",*n); } 下面的结果是程序A还是程序B的？ Data v　alue is 8 那么另一段程序的结果是什么？ 
+嵌入式面试 01
+16、那种排序方法最快? （华为面试题）
+17、写出两个排序算法,问哪个好？（威盛） 
+18、编一个简单的求n!的程序 。（Infineon笔试试题） 
+19、用一种编程语言写n!的算法。（威盛VIA 2003.11.06 上海笔试试题） 
+20、用C语言写一个递归算法求N！；（华为面试题） 
+21、给一个C的函数，关于字符串和数组，找出错误；（华为面试题） 
+22、防火墙是怎么实现的？ （华为面试题） 
+23、你对哪方面编程熟悉？（华为面试题） 
+24、冒泡排序的原理。（新太硬件面题） 
+25、操作系统的功能。（新太硬件面题） 
+26、学过的计算机语言及开发的系统。（新太硬件面题） 
+27、一个农夫发现围成正方形的围栏比长方形的节省4个木桩但是面积一样.羊的数目和正 方形围栏的桩子的个数一样但是小于36，问有多少羊？（威盛） 
+28、C语言实现统计某个cell在某.v文件调用的次数(这个题目真bt) （威盛VIA2003.11.06 上海笔试试题） 
+29、用C语言写一段控制手机中马达振子的驱动程序。(威胜) 
+30、用perl或TCL/Tk实现一段字符串识别和比较的程序。（未知） 
+31、给出一个堆栈的结构，求中断后显示结果，主要是考堆栈压入返回地址存放在低端地 址还是高端。（未知） 
+32、一些DOS命令，如显示文件，拷贝，删除。（未知） 
+33、设计一个类，使得该类任何形式的派生类无论怎么定义和实现，都无法产生任何对象 实例。（IBM） 
+34、What is pre-emption? (Intel) 
+35、What is the state of a process if a resource is not available? (Intel) 
+36、三个 float a,b,c;问值（a b） c==(b a) c， (a b) c==(a c) b。(Intel) 
+37、把一个链表反向填空。 (lucent) 38、x^4 a*x^3 x^2 c*x d 最少需要做几次乘法？ (Dephi) ____________________________________________________________ 
+六、主观题 
+1、你认为你从事研发工作有哪些特点？（仕兰微面试题目） 
+2、说出你的最大弱点及改进方法。（威盛VIA 2003.11.06 上海笔试试题） 
+3、说出你的理想。说出你想达到的目标。 题目是英文出的，要用英文回答。（威盛VIA 2003.11.06 上海笔试试题） 
+4、我们将研发人员分为若干研究方向，对协议和算法理解（主要应用在网络通信、图象语音压缩方面）、电子系统方案的研究、用MCU、DSP编程实现电路功能、用ASIC设计技术 设计电路（包括MCU、DSP本身）、电路功能模块设计（包括模拟电路和数字电路）、集成 电路后端设计（主要是指综合及自动布局布线技术）、集成电路设计与工艺接口的研究. 你希望从事哪方面的研究？（可以选择多个方向。另外，已经从事过相关研发的人员可以详细描述你的研发经历）。（仕兰微面试题目） 
+5、请谈谈对一个系统设计的总体思路。针对这个思路，你觉得应该具备哪些方面的知识？（仕兰微面试题目） 
+6、设想你将设计完成一个电子电路方案。请简述用EDA软件（如PROTEL）进行设计（包括 原理图和PCB图）到调试出样机的整个过程。在各环节应注意哪些问题？电源的稳定，电 容的选取，以及布局的大小。（汉王笔试） 
+七、共同的注意点 
+1.一般情况下，面试官主要根据你的简历提问，所以一定要对自己负责，把简历上的东西搞明白； 
+2.个别招聘针对性特别强，就招目前他们确的方向的人，这种情况下，就要投其所好，尽量介绍其所关心的东西。 
+3.其实技术面试并不难，但是由于很多东西都忘掉了，才觉得有些难。所以最好在面试前把该看的书看看。 
+4.虽然说技术面试是实力的较量与体现，但是不可否认，由于不用面试官/公司所专领域及爱好不同，也有面试也有很大的偶然性，需要冷静对待。不能因为被拒，就否认自己或责骂公司。 
+5.面试时要take it easy，对越是自己钟情的公司越要这样。
+嵌入式面试 0
+DSP、嵌入式、软件等 
+1、请用方框图描述一个你熟悉的实用数字信号处理系统，并做简要的分析；如果没有，也可以自己设计一个简单的数字信号处理系统，并描述其功能及用途。（仕兰微面试题目）  
+2、数字滤波器的分类和结构特点。（仕兰微面试题目） 
+3、IIR，FIR滤波器的异同。（新太硬件面题） 
+4、拉氏变换与Z变换公式等类似东西，随便翻翻书把如.h(n)=-a*h(n-1) b*δ(n) a.求h(n)的z变换；b.问该系统是否为稳定系统；c.写出FIR数字滤波器的差分方程；（未知） 
+5、DSP和通用处理器在结构上有什么不同，请简要画出你熟悉的一种DSP结构图。（信威dsp软件面试题） 
+6、说说定点DSP和浮点DSP的定义（或者说出他们的区别）（信威dsp软件面试题） 
+7、说说你对循环寻址和位反序寻址的理解.（信威dsp软件面试题） 
+8、请写出【－8，7】的二进制补码，和二进制偏置码。用Q15表示出0.5和－0.5.（信威dsp软件面试题） 
+9、DSP的结构（哈佛结构）；（未知） 
+10、嵌入式处理器类型(如ARM)，操作系统种类（Vxworks,ucos,winCE,linux），操作系统方面偏CS方向了，在CS篇里面讲了；（未知） 
+11、有一个LDO芯片将用于对手机供电，需要你对他进行评估，你将如何设计你的测试项目？ 
+12、某程序在一个嵌入式系统（200M CPU，50M SDRAM）中已经最优化了，换到零一个系统（300M CPU，50M SDRAM）中是否还需要优化？ （Intel） 
+13、请简要描述HUFFMAN编码的基本原理及其基本的实现方法。（仕兰微面试题目） 
+14、说出OSI七层网络协议中的四层（任意四层）。（仕兰微面试题目） 
+15、A） （仕兰微面试题目） ＃i nclude void testf(int*p) { *p =1; } main() { int *n,m[2]; n=m; m[0]=1; m[1]=8; testf(n); printf("Data v　alue is %d ",*n); } ------------------------------ B) ＃i nclude void testf(int**p) { *p =1; } main() {int *n,m[2]; n=m; m[0]=1; m[1]=8; testf(&n); printf(Data v　alue is %d",*n); } 下面的结果是程序A还是程序B的？ Data v　alue is 8 那么另一段程序的结果是什么？ 
+
+
+嵌入式软件岗位笔试题
+ (笔试时间：90分钟)
+
+    注：该试卷不得答题，请在答题纸上做答。答题纸上须写明姓名、学校、专业、学历、联系方式，并标明题号答题。笔试完毕后，试卷、答题纸、草稿纸一并交予招聘人员，不得携带出笔试现场。
+1、 （5分）写一个宏MIN，这个宏输入两个参数并返回较小的一个：             												   。
+2、 （5分）常用的51系列单片机的数据线和低地址线是复用的，一般在电路设计中是如何把他们分开的                                        。
+3、 （5分）在中断响应过程中，CPU保护PC等寄存器的主要目的是：                                                  。
+4、 （5分）若码值FFH是一个整数的原码表示，则该整数的真值为   ：若码值FFH是一个整数的补码表示，则该整数的真值为      。
+5、 （5分）在C语言中，假设有这样的定义“int a = 6, b = 9, c;”，那么，在执行完如下操作“c = a+++++b;”之后，a =       ，b =       ，c =       。
+6、 MCS-51单片机通常包括哪些功能模块？同时请画图描述一下大致的框图（10分）
+7、 用变量a给出下面的描述在C语言中的定义，如a)示例描述的（10分）
+　　a) 一个整型数（An integer） （示例： int a；）
+　　b)一个指向整型数的指针（ A pointer to an integer） 
+　　c)一个指向指针的的指针，它指向的指针是指向一个整型数（ A pointer to a pointer to an intege）r 
+　　d)一个有10个整型数的数组（ An array of 10 integers） 
+　　e) 一个有10个指针的数组，该指针是指向一个整型数的。（An array of 10 pointers to 
+　　integers） 
+　　f) 一个指向有10个整型数数组的指针（ A pointer to an array of 10 integers） 
+　　g) 一个指向函数的指针，该函数有一个整型参数并返回一个整型数（A pointer to a function 
+　　that takes an integer as an argument and returns an integer） 
+　 　h) 一个有10个指针的数组，该指针指向一个函数，该函数有一个整型参数并返回一个整型数（ An array of ten pointers to functions that take an integer argument and return an integer ）
+
+8、 评价一下下面这段ISR程序，指出它有哪些毛病（10分）
+__interrupt double compute_area (double radius) 
+{
+　　double area = PI * radius * radius;
+　　printf("\nArea = %f", area);
+　　return area;
+}
+
+9、 请写出下列英文语句的中文含义：（10分）
+   Authentication Phase:
+   On some links it may be desirable to require a peer to authenticate
+   itself before allowing network-layer protocol packets to be
+   exchanged.
+   By default, authentication is not mandatory.  If an implementation
+   desires that the peer authenticate with some specific authentication
+   protocol, then it MUST request the use of that authentication
+   protocol during Link Establishment phase.
+   Authentication SHOULD take place as soon as possible after link
+   establishment. 
+   Advancement from the Authentication phase to the Network-Layer
+   Protocol phase MUST NOT occur until authentication has completed.  If
+   authentication fails, the authenticator SHOULD proceed instead to the
+   Link Termination phase.
+   Only Link Control Protocol, authentication protocol, and link quality
+   monitoring packets are allowed during this phase.  All other packets
+   received during this phase MUST be silently discarded.
+(原文摘抄自RFC1661(ppp))
+
+10、 关键字const有什么含意？关键字volatile有什么含意? 关键字static的作用是什么？请阐述，可以举例描述 (10分)
+
+11、 函数f(char *str，char del)的功能是；将非空字符串str分割成若干个子字符串并输出，del表示分割时的标志字符。例如若str的值为“33123333435”，del的值为‘3’，调用此函数后，将输出三个子字符串，分别为“12”、“4”和“5”。请用标准C语音实现该函数。（10分）
+
+12、 利用MCS51的IO口，进行3×4键盘的采集，请画出电路原理图，并用C语言写出键盘扫描程序。（IO口部分可以自行定义）（15分）
+
+
+
+
+3、两个数相乘，小数点后位数没有限制，请写一个高精度算法
+
+5、不使用额外空间,将 A,B两链表的元素交*归并
+
+6、将树序列化 转存在数组或 链表中
+
+struct st{
+   int i;
+   short s;
+   char c;
+};
+sizeof(struct st);
+二分查找
+
+快速排序
+
+双向链表的删除结点
+ 
+3、已知数据序列为（12，5，9，20，6，31，24），对该数据序列进行排序，试写出插入排序和冒泡排序.
+
+1、解释C语言关键字extern、static的含义。
+
+2、解释C语言关键字volatile、const的含义。
+3、举例说明typedef和define的用法。
+　  4、语句for( ；1 ；)有什么问题？它是什么意思？
+　　5、do……while和while……do有什么区别？
+8、下面是51单片机最小系统电路图，试分析该电路结构以及实现原理？
+9、谈谈汇编语言、C和C++三种语言在嵌入式开发中的区别和特点？简述你对嵌入式概念的理解？
+10、列举常见的嵌入式操作系统和单片机？简要介绍你以前做过的项目，在项目中用过什么处理器和操作系统，实现什么功能以及关键技术。
+威盛的一场笔试
+
+1.什么是平衡二叉树？编写一个删除平衡二叉树的程序？
+2.写一个程序，求有向有权图两点之间的最小权？
+3.根据你的理解，写出Cstring类的构造函数和析构函数？
+4.使用C语言实现对ini文件的访问，使程序可以对int，double，字符串类进行读写。
+5.n×n个方格（n为任意整数），定义若两个格有公共边则称两个格相邻。现将n个格中的N个格子图黑，使每个格子都与黑格子相邻。试编程，使N最小。
+1、将一个字符串逆序 
+2、将一个链表逆序 
+3、计算一个字节里（byte）里面有多少bit被置1 
+4、搜索给定的字节(byte) 
+5、在一个字符串中找到可能的最长的子字符串 
+6、字符串转换为整数 
+7、整数转换为字符串
+1、char *strconv(char *p)
+{
+    int i,length;
+    char temp;
+    length = strlen(p);
+    for(i = 0;i < length/2;i++)
+    {
+        temp = *(p + i);
+        *(p + i) = *(p + length - 1 - i);
+        *(p +length - 1 - i) = temp;
+    }
+    return p;
+}
+int main()
+{
+    char src[100];
+    char *p;
+    scanf("%s",src);
+    p = strconv(src);
+    printf("%s\n",p);
+    return 0;
+}
+3、int cal(int data) //calculation the number of bit in one byte
+{
+    int a;
+    int count = 0;
+    a = data % 100;
+    while (a != 0)
+    {
+        count += a % 2;
+        a /= 2;
+    }
+    return count;
+}
+int main()
+{
+    int d,count;
+    scanf("%d",&d);
+    count = cal(d);
+    printf("%d of one\n",count);
+    return 0;
+}
+4、#include<stdio.h>
+#include<string.h>
+void findmax(char *p)
+{
+    int j = 0,max = 0;
+    int count = 0;
+    char record[200];
+    char recordmax[200];
+    for(int i = 0;;i++)
+    {        
+        if((*(p + i) == ' ') || (*(p + i) == '\0'))
+        {        
+            if(count > max)
+            {
+                max = count;
+                record[j] = '\0';
+                strcpy(recordmax,record);            
+            }
+            count = 0;
+            j = 0;
+        }
+        else
+        {
+            record[j] = *(p + i);
+            count ++;
+            j ++;
+        }
+        if(*(p + i) == '\0')
+            break;
+    }
+    printf("%s\n",recordmax);
+}
+int main()
+{
+    char str[]="zeng weidsfdsaf langd hah";
+    printf("%s\n",str);
+    findmax(str);
+    return 0;
+}
+
+
+

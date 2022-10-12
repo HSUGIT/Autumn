@@ -1,0 +1,125 @@
+====
+2、 如果有一个简单的helloworld项目目录如下：
+# tree helloworld
+helloworld
+|– file2.h
+|– file1.cpp
+|– file2.cpp
+请编写一个Makefile文件。
+答：
+TARGET = helloworld
+CXX = g++
+COMPILE := $(COMPILE) file1.cpp
+COMPILE := $(COMPILE) file2.cpp
+OBJECTS := $(foreach var,$(COMPILE), $(var:.cpp=.o))
+
+.PHONY default clean
+default: $(TARGET)
+$(TARGET):$(OBJECTS)
+	$(CXX) -o $(TARGET) $(OBJECTS)
+%.o:%.cpp
+	$(CXX) -c $<
+clean:
+	@rm -rf $(OBJECTS) $(TARGET)
+
+讲解1：
+foo := a.o b.o c.o // 在变量后追加值
+bar := $(foo:.o=.c)
+这个示例中，我们先定义了一个“$(foo)”变量，而第二行的意思是把“$(foo)”中所有以“.o”字串“结尾”全部替换成“.c”，所以我们的“$(bar)”的值就是“a.c b.c c.c”。
+讲解2：
+“$<”表示所有的依赖目标集（也就是“file1.cpp file2.cpp”），“$@”表示目标集（也就是file1.o file2.o”）
+讲解3：
+$(foreach <var>,<list>,<text>)
+这个函数的意思是，把参数<list>;中的单词逐一取出放到参数<var>;所指定的变量中，然后再执行< text>;所包含的表达式。每一次<text>;会返回一个字符串，循环过程中，<text>;的所返回的每个字符串会以空格分隔，最后当整个循环结束时，<text>;所返回的每个字符串所组成的整个字符串（以空格分隔）将会是foreach函数的返回值。
+
+或者简单点的：
+helloworld: file1.o file2.o
+	g++ -o helloworld file1.o file2.o
+file1.o:file1.cpp
+	g++ -c file1.cpp
+file2.o:file2.cpp file2.h
+	g++ -c file2.cpp
+clean: 
+	rm file1.o file2.o helleworld
+权重：中
+
+====
+12.在Linux系统中, 哪个文件你可以存储用于创建用户目录的系统用户默认文件?(D)
+A./usr/tmp
+B./etc/default
+C./etc/skel
+D./etc/users
+权重：中
+
+====
+Linux默认的可执行bin文件路径是什么
+答：/bin, /usr/bin
+权重：中
+
+====
+Linux默认的库文件路径是什么
+答：/lib, /usr/lib
+权重：中
+
+====
+Linux的启动脚本一般在哪里
+答：rc.d、etc/profile等
+权重：中
+
+====
+21.Linux执行ls，会引起哪些系统调用(BCD)【多选】
+A nmap
+B read
+C execve
+D fork
+解析：任何shell都会执行 exec 和 fork，而ls会执行read三个加起来
+权重：较低
+
+====
+6、GCC -g -o test.elf test.c的具体含义.
+答：将当前目录下test.c编译成带GDB调试功能的应用程序test.elf。注意，其中应用到了gcc的隐藏规则，本来应该是两步：GCC -o test.elf test.o    GCC -c test.c，但是直接用-o test.c的时候gcc会自动推导。-g选项嵌入式应该掌握，-g后程序崩溃后生成的core文件在GDB下可以看到更多的信息，也可以配合GDB在运行时单步执行，设置断点什么的。
+权重：中
+
+===
+用gcc将test.c编译成一个可执行文件test
+答：gcc -o test test.c
+权重：中
+
+====
+1、一些Linux命令：显示文件、拷贝文件、移动文件、删除文件。
+答：显示文件ls，显示隐藏文件ls -a，显示文件详细信息ls -l；
+拷贝文件cp source_name dest_name，强制复制文件和目录cp -rf source_name dest_name；移动文件mv source_name dest_name；删除文件rm file_name。
+权重：高
+
+====
+4、LINUX下查看进程的命令？查看系统资源使用情况的命令？netstat是作什么用的？
+答：linux下查看进程的命令，ps命令
+使用free-m命令
+Netstat命令是查看网络连接的详细状态的命令
+权重：较高
+
+====
+Linux查看进程信息的命令
+答：top
+权重：较高
+
+====
+Linux搜索文件内容和文件名的命令
+答：grep -rn 文件内容
+find . 文件名
+或者在匹配文件名的文件中查找文件内容
+find . filename | xargs grep -rn filecontent
+权重：中
+
+====
+描述*在查找和正则表达式中的含义
+答：表示0个或多个任意字符
+权重：中
+
+====
+6、解释命令ls -a | more具体含义.
+答：分页显示当前目录下包含隐藏文件在内的所有文件。
+权重：中
+
+
+
